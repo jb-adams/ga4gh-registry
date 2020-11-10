@@ -17,6 +17,9 @@ plugins {
     id 'com.github.kt3k.coveralls' version '2.6.3'
 }
 
+sourceSets.main.resources.srcDirs = [ "src/main/resources" ]
+sourceSets.main.resources.includes = [ "**/*.html", "**/*.yaml" ]
+
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.

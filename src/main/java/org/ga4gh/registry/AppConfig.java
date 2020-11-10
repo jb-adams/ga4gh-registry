@@ -47,6 +47,7 @@ import org.ga4gh.registry.util.serialize.serializers.StandardSerializer;
 import org.ga4gh.registry.util.serialize.serializers.StandardVersionSerializer;
 import org.ga4gh.registry.util.serialize.serializers.WorkStreamSerializer;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,7 +57,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @ConfigurationProperties
-public class AppConfig implements WebMvcConfigurer {
+public class AppConfig extends WebMvcAutoConfiguration implements WebMvcConfigurer {
 
     /* ******************************
      * LOW-LEVEL HIBERNATE-RELATED BEANS
