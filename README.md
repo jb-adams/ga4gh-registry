@@ -10,7 +10,7 @@
 
 ## Using the API
 
-See the [GA4GH Planet OpenAPI Docs]() for full developer documentation on the production API.
+See the [GA4GH Planet OpenAPI Docs](https://registry.ga4gh.org/v1/docs/index.html) for full developer documentation on the production API.
 
 The production API is available at `https://registry.ga4gh.org/v1/`. Example HTTPS requests include:
 
