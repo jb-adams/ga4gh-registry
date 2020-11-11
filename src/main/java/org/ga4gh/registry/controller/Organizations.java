@@ -3,7 +3,7 @@ package org.ga4gh.registry.controller;
 import java.util.Map;
 import org.ga4gh.registry.AppConfigConstants;
 import org.ga4gh.registry.model.Organization;
-import org.ga4gh.registry.util.requesthandler.RequestHandlerFactory;
+import org.ga4gh.registry.util.requesthandler.SingleGenericRequestHandlerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -25,23 +25,23 @@ public class Organizations {
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_ORGANIZATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Organization, Organization, Organization> indexOrganization;
+    SingleGenericRequestHandlerFactory<Organization> indexOrganization;
 
     @Autowired
     @Qualifier(AppConfigConstants.SHOW_ORGANIZATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Organization, Organization, Organization> showOrganization;
+    SingleGenericRequestHandlerFactory<Organization> showOrganization;
 
     @Autowired
     @Qualifier(AppConfigConstants.POST_ORGANIZATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Organization, Organization, Organization> postOrganization;
+    SingleGenericRequestHandlerFactory<Organization> postOrganization;
 
     @Autowired
     @Qualifier(AppConfigConstants.PUT_ORGANIZATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Organization, Organization, Organization> putOrganization;
+    SingleGenericRequestHandlerFactory<Organization> putOrganization;
 
     @Autowired
     @Qualifier(AppConfigConstants.DELETE_ORGANIZATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Organization, Organization, Organization> deleteOrganization;
+    SingleGenericRequestHandlerFactory<Organization> deleteOrganization;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> getOrganizations() {

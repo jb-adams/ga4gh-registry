@@ -4,6 +4,7 @@ import java.util.Map;
 import org.ga4gh.registry.AppConfigConstants;
 import org.ga4gh.registry.model.Implementation;
 import org.ga4gh.registry.util.requesthandler.RequestHandlerFactory;
+import org.ga4gh.registry.util.requesthandler.SingleGenericRequestHandlerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,23 +27,23 @@ public class Services {
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_SERVICE_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation, Implementation, Implementation> indexService;
+    SingleGenericRequestHandlerFactory<Implementation> indexService;
 
     @Autowired
     @Qualifier(AppConfigConstants.SHOW_SERVICE_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation, Implementation, Implementation> showService;
+    SingleGenericRequestHandlerFactory<Implementation> showService;
 
     @Autowired
     @Qualifier(AppConfigConstants.POST_SERVICE_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation, Implementation, Implementation> postService;
+    SingleGenericRequestHandlerFactory<Implementation> postService;
 
     @Autowired
     @Qualifier(AppConfigConstants.PUT_SERVICE_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation, Implementation, Implementation> putService;
+    SingleGenericRequestHandlerFactory<Implementation> putService;
 
     @Autowired
     @Qualifier(AppConfigConstants.DELETE_SERVICE_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation, Implementation, Implementation> deleteService;
+    SingleGenericRequestHandlerFactory<Implementation> deleteService;
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_SERVICE_TYPES_HANDLER_FACTORY)

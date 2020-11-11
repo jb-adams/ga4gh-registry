@@ -13,6 +13,7 @@ import org.ga4gh.registry.util.auth.PlaceholderAuth;
 import org.ga4gh.registry.util.hibernate.HibernateConfig;
 import org.ga4gh.registry.util.hibernate.HibernateUtil;
 import org.ga4gh.registry.util.requesthandler.RequestHandlerFactory;
+import org.ga4gh.registry.util.requesthandler.SingleGenericRequestHandlerFactory;
 import org.ga4gh.registry.util.requesthandler.delete.DeleteImplementationHandler;
 import org.ga4gh.registry.util.requesthandler.delete.DeleteRequestHandler;
 import org.ga4gh.registry.util.requesthandler.delete.DeleteServiceHandler;
@@ -324,128 +325,128 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean
     @Qualifier(AppConfigConstants.INDEX_STANDARD_HANDLER_FACTORY)
-    public RequestHandlerFactory<Standard, Standard, Standard> indexStandardHandlerFactory() {
-        return new RequestHandlerFactory<>(Standard.class, AppConfigConstants.INDEX_STANDARD_HANDLER);
+    public SingleGenericRequestHandlerFactory<Standard> indexStandardHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Standard.class, AppConfigConstants.INDEX_STANDARD_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.SHOW_STANDARD_HANDLER_FACTORY)
-    public RequestHandlerFactory<Standard, Standard, Standard> showStandardHandlerFactory() {
-        return new RequestHandlerFactory<>(Standard.class, AppConfigConstants.SHOW_STANDARD_HANDLER);
+    public SingleGenericRequestHandlerFactory<Standard> showStandardHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Standard.class, AppConfigConstants.SHOW_STANDARD_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.POST_STANDARD_HANDLER_FACTORY)
-    public RequestHandlerFactory<Standard, Standard, Standard> postStandardHandlerFactory() {
-        return new RequestHandlerFactory<>(Standard.class, AppConfigConstants.POST_STANDARD_HANDLER);
+    public SingleGenericRequestHandlerFactory<Standard> postStandardHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Standard.class, AppConfigConstants.POST_STANDARD_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.PUT_STANDARD_HANDLER_FACTORY)
-    public RequestHandlerFactory<Standard, Standard, Standard> putStandardHandlerFactory() {
-        return new RequestHandlerFactory<>(Standard.class, AppConfigConstants.PUT_STANDARD_HANDLER);
+    public SingleGenericRequestHandlerFactory<Standard> putStandardHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Standard.class, AppConfigConstants.PUT_STANDARD_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.DELETE_STANDARD_HANDLER_FACTORY)
-    public RequestHandlerFactory<Standard, Standard, Standard> deleteStandardHandlerFactory() {
-        return new RequestHandlerFactory<>(Standard.class, AppConfigConstants.DELETE_STANDARD_HANDLER);
+    public SingleGenericRequestHandlerFactory<Standard> deleteStandardHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Standard.class, AppConfigConstants.DELETE_STANDARD_HANDLER);
     }
 
     /* ORGANIZATION REQUEST HANDLER FACTORY BEANS */
 
     @Bean
     @Qualifier(AppConfigConstants.INDEX_ORGANIZATION_HANDLER_FACTORY)
-    public RequestHandlerFactory<Organization, Organization, Organization> indexOrganizationHandlerFactory() {
-        return new RequestHandlerFactory<>(Organization.class, AppConfigConstants.INDEX_ORGANIZATION_HANDLER);
+    public SingleGenericRequestHandlerFactory<Organization> indexOrganizationHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Organization.class, AppConfigConstants.INDEX_ORGANIZATION_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.SHOW_ORGANIZATION_HANDLER_FACTORY)
-    public RequestHandlerFactory<Organization, Organization, Organization> showOrganizationHandlerFactory() {
-        return new RequestHandlerFactory<>(Organization.class, AppConfigConstants.SHOW_ORGANIZATION_HANDLER);
+    public SingleGenericRequestHandlerFactory<Organization> showOrganizationHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Organization.class, AppConfigConstants.SHOW_ORGANIZATION_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.POST_ORGANIZATION_HANDLER_FACTORY)
-    public RequestHandlerFactory<Organization, Organization, Organization> postOrganizationHandlerFactory() {
-        return new RequestHandlerFactory<>(Organization.class, AppConfigConstants.POST_ORGANIZATION_HANDLER);
+    public SingleGenericRequestHandlerFactory<Organization> postOrganizationHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Organization.class, AppConfigConstants.POST_ORGANIZATION_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.PUT_ORGANIZATION_HANDLER_FACTORY)
-    public RequestHandlerFactory<Organization, Organization, Organization> putOrganizationHandlerFactory() {
-        return new RequestHandlerFactory<>(Organization.class, AppConfigConstants.PUT_ORGANIZATION_HANDLER);
+    public SingleGenericRequestHandlerFactory<Organization> putOrganizationHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Organization.class, AppConfigConstants.PUT_ORGANIZATION_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.DELETE_ORGANIZATION_HANDLER_FACTORY)
-    public RequestHandlerFactory<Organization, Organization, Organization> deleteOrganizationHandlerFactory() {
-        return new RequestHandlerFactory<>(Organization.class, AppConfigConstants.DELETE_ORGANIZATION_HANDLER);
+    public SingleGenericRequestHandlerFactory<Organization> deleteOrganizationHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Organization.class, AppConfigConstants.DELETE_ORGANIZATION_HANDLER);
     }
 
     /* IMPLEMENTATION REQUEST HANDLER FACTORY BEANS */
 
     @Bean
     @Qualifier(AppConfigConstants.INDEX_IMPLEMENTATION_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> indexImplementationHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.INDEX_IMPLEMENTATION_HANDLER);
+    public SingleGenericRequestHandlerFactory<Implementation> indexImplementationHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.INDEX_IMPLEMENTATION_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.SHOW_IMPLEMENTATION_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> showImplementationHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.SHOW_IMPLEMENTATION_HANDLER);
+    public SingleGenericRequestHandlerFactory<Implementation> showImplementationHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.SHOW_IMPLEMENTATION_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.POST_IMPLEMENTATION_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> postImplementationHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.POST_IMPLEMENTATION_HANDLER);
+    public SingleGenericRequestHandlerFactory<Implementation> postImplementationHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.POST_IMPLEMENTATION_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.PUT_IMPLEMENTATION_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> putImplementationHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.PUT_IMPLEMENTATION_HANDLER);
+    public SingleGenericRequestHandlerFactory<Implementation> putImplementationHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.PUT_IMPLEMENTATION_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.DELETE_IMPLEMENTATION_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> deleteImplementationHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.DELETE_IMPLEMENTATION_HANDLER);
+    public SingleGenericRequestHandlerFactory<Implementation> deleteImplementationHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.DELETE_IMPLEMENTATION_HANDLER);
     }
 
     /* SERVICE REQUEST HANDLER FACTORY BEANS */
 
     @Bean
     @Qualifier(AppConfigConstants.INDEX_SERVICE_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> indexServiceHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.INDEX_SERVICE_HANDLER);
+    public SingleGenericRequestHandlerFactory<Implementation> indexServiceHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.INDEX_SERVICE_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.SHOW_SERVICE_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> showServiceHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.SHOW_SERVICE_HANDLER);
+    public SingleGenericRequestHandlerFactory<Implementation> showServiceHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.SHOW_SERVICE_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.POST_SERVICE_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> postServiceHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.POST_SERVICE_HANDLER);
+    public SingleGenericRequestHandlerFactory<Implementation> postServiceHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.POST_SERVICE_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.PUT_SERVICE_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> putServiceHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.PUT_SERVICE_HANDLER);
+    public SingleGenericRequestHandlerFactory<Implementation> putServiceHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.PUT_SERVICE_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.DELETE_SERVICE_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> deleteServiceHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.DELETE_SERVICE_HANDLER);
+    public SingleGenericRequestHandlerFactory<Implementation> deleteServiceHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.DELETE_SERVICE_HANDLER);
     }
 
     @Bean
@@ -458,8 +459,8 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean
     @Qualifier(AppConfigConstants.SHOW_SERVICE_INFO_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> showServiceInfoHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.SHOW_SERVICE_INFO_HANDLER);
+    public SingleGenericRequestHandlerFactory<Implementation> showServiceInfoHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.SHOW_SERVICE_INFO_HANDLER);
     }
 
     /* RESOLVE REQUEST HANDLER FACTORY BEANS */

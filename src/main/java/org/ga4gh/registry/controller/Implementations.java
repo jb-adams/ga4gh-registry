@@ -3,7 +3,7 @@ package org.ga4gh.registry.controller;
 import java.util.Map;
 import org.ga4gh.registry.AppConfigConstants;
 import org.ga4gh.registry.model.Implementation;
-import org.ga4gh.registry.util.requesthandler.RequestHandlerFactory;
+import org.ga4gh.registry.util.requesthandler.SingleGenericRequestHandlerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -26,23 +26,23 @@ public class Implementations {
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_IMPLEMENTATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation, Implementation, Implementation> indexImplementation;
+    SingleGenericRequestHandlerFactory<Implementation> indexImplementation;
 
     @Autowired
     @Qualifier(AppConfigConstants.SHOW_IMPLEMENTATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation, Implementation, Implementation> showImplementation;
+    SingleGenericRequestHandlerFactory<Implementation> showImplementation;
 
     @Autowired
     @Qualifier(AppConfigConstants.POST_IMPLEMENTATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation, Implementation, Implementation> postImplementation;
+    SingleGenericRequestHandlerFactory<Implementation> postImplementation;
 
     @Autowired
     @Qualifier(AppConfigConstants.PUT_IMPLEMENTATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation, Implementation, Implementation> putImplementation;
+    SingleGenericRequestHandlerFactory<Implementation> putImplementation;
 
     @Autowired
     @Qualifier(AppConfigConstants.DELETE_IMPLEMENTATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation, Implementation, Implementation> deleteImplementation;
+    SingleGenericRequestHandlerFactory<Implementation> deleteImplementation;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> getImplementations(@RequestParam Map<String, String> queryParams) {

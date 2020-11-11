@@ -3,7 +3,7 @@ package org.ga4gh.registry.controller;
 import java.util.Map;
 import org.ga4gh.registry.AppConfigConstants;
 import org.ga4gh.registry.model.Standard;
-import org.ga4gh.registry.util.requesthandler.RequestHandlerFactory;
+import org.ga4gh.registry.util.requesthandler.SingleGenericRequestHandlerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,23 +25,23 @@ public class Standards {
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_STANDARD_HANDLER_FACTORY)
-    RequestHandlerFactory<Standard, Standard, Standard> indexStandard;
+    SingleGenericRequestHandlerFactory<Standard> indexStandard;
 
     @Autowired
     @Qualifier(AppConfigConstants.SHOW_STANDARD_HANDLER_FACTORY)
-    RequestHandlerFactory<Standard, Standard, Standard> showStandard;
+    SingleGenericRequestHandlerFactory<Standard> showStandard;
 
     @Autowired
     @Qualifier(AppConfigConstants.POST_STANDARD_HANDLER_FACTORY)
-    RequestHandlerFactory<Standard, Standard, Standard> postStandard;
+    SingleGenericRequestHandlerFactory<Standard> postStandard;
 
     @Autowired
     @Qualifier(AppConfigConstants.PUT_STANDARD_HANDLER_FACTORY)
-    RequestHandlerFactory<Standard, Standard, Standard> putStandard;
+    SingleGenericRequestHandlerFactory<Standard> putStandard;
 
     @Autowired
     @Qualifier(AppConfigConstants.DELETE_STANDARD_HANDLER_FACTORY)
-    RequestHandlerFactory<Standard, Standard, Standard> deleteStandard;
+    SingleGenericRequestHandlerFactory<Standard> deleteStandard;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> getStandards() {
