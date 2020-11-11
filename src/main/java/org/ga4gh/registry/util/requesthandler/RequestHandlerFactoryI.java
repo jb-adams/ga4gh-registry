@@ -6,13 +6,13 @@ import org.ga4gh.registry.model.RegistryModel;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.ResponseEntity;
 
-public interface RequestHandlerFactoryI<T extends RegistryModel> extends ApplicationContextAware {
+public interface RequestHandlerFactoryI<B extends RegistryModel> extends ApplicationContextAware {
     public ResponseEntity<String> handleRequest();
-    public ResponseEntity<String> handleRequest(Map<String, String> requestVariables);
-    public ResponseEntity<String> handleRequest(Map<String, String> requestVariablesA, Map<String, String> requestVariablesB);
-    public ResponseEntity<String> handleRequest(Map<String, String> requestVariablesA, Map<String, String> requestVariablesB, Map<String, String> requestVariablesC);
-    public ResponseEntity<String> handleRequest(T requestBody);
-    public ResponseEntity<String> handleRequest(Map<String, String> requestVariables, T requestBody);
-    public ResponseEntity<String> handleRequest(Map<String, String> requestVariablesA, Map<String, String> requestVariablesB, T requestBody);
-    public ResponseEntity<String> handleRequest(Map<String, String> requestVariablesA, Map<String, String> requestVariablesB, Map<String, String> requestVariablesC, T requestBody);
+    public ResponseEntity<String> handleRequest(Map<String, String> pathParams);
+    public ResponseEntity<String> handleRequest(Map<String, String> pathParams, Map<String, String> queryParams);
+    public ResponseEntity<String> handleRequest(Map<String, String> pathParams, Map<String, String> queryParams, Map<String, String> headerParams);
+    public ResponseEntity<String> handleRequest(B requestBody);
+    public ResponseEntity<String> handleRequest(Map<String, String> pathParams, B requestBody);
+    public ResponseEntity<String> handleRequest(Map<String, String> pathParams, Map<String, String> queryParams, B requestBody);
+    public ResponseEntity<String> handleRequest(Map<String, String> pathParams, Map<String, String> queryParams, Map<String, String> headerParams, B requestBody);
 }

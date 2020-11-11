@@ -21,7 +21,7 @@ public class ServiceInfo {
 
     @Autowired
     @Qualifier(AppConfigConstants.SHOW_SERVICE_INFO_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> showServiceInfo;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> showServiceInfo;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> getServiceInfo(@RequestHeader Map<String, String> headers) {

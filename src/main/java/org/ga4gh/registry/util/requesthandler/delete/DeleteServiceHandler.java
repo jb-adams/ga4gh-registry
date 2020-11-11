@@ -5,7 +5,7 @@ import org.ga4gh.registry.model.Implementation;
 import org.ga4gh.registry.model.ImplementationCategory;
 import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 
-public class DeleteServiceHandler extends DeleteRequestHandler<Implementation> {
+public class DeleteServiceHandler extends DeleteRequestHandler<Implementation, Implementation, Implementation> {
 
     public DeleteServiceHandler(Class<Implementation> responseClass, RegistrySerializerModule serializerModule, String idPathParameterName) {
         super(responseClass, serializerModule, idPathParameterName);

@@ -22,10 +22,10 @@ public class Resolve {
 
     @Autowired
     @Qualifier(AppConfigConstants.RESOLVE_URI_HANDLER_FACTORY)
-    RequestHandlerFactory<URIResolution> resolveURIHandlerFactory;
+    RequestHandlerFactory<URIResolution, URIResolution, URIResolution> resolveURIHandlerFactory;
 
     @GetMapping(path = "/{uri:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> resolveURI(@PathVariable Map<String, String> pathVariables) {
-        return resolveURIHandlerFactory.handleRequest(pathVariables);
+    public ResponseEntity<String> resolveURI(@PathVariable Map<String, String> pathParams) {
+        return resolveURIHandlerFactory.handleRequest(pathParams);
     }
 }

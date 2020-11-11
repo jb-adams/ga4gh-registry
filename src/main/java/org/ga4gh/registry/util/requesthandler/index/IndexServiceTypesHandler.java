@@ -9,7 +9,7 @@ import org.ga4gh.registry.util.hibernate.HibernateQuerier;
 import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 import org.springframework.http.ResponseEntity;
 
-public class IndexServiceTypesHandler extends IndexRequestHandler<Implementation> {
+public class IndexServiceTypesHandler extends IndexRequestHandler<Implementation, Implementation, Implementation> {
 
     public IndexServiceTypesHandler(Class<Implementation> responseClass, RegistrySerializerModule serializerModule, HibernateQuerier<Implementation> querier) {
         super(responseClass, serializerModule, querier);

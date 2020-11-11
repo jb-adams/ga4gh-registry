@@ -9,21 +9,21 @@ import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-public class IndexRequestHandler<T extends RegistryModel> extends RequestHandler<T> {
+public class IndexRequestHandler<B extends RegistryModel, D extends RegistryModel, R extends RegistryModel> extends RequestHandler<B, D, R> {
 
-    HibernateQuerier<T> querier;
+    HibernateQuerier<D> querier;
 
     @Autowired
     HibernateQueryBuilder queryBuilder;
 
     @Autowired
-    public IndexRequestHandler(Class<T> responseClass, RegistrySerializerModule serializerModule, HibernateQuerier<T> querier) {
-        super(responseClass, serializerModule);
+    public IndexRequestHandler(Class<B> allClasses, RegistrySerializerModule serializerModule, HibernateQuerier<D> querier) {
+        super(allClasses, serializerModule);
         setQuerier(querier);
     }
 
-    public List<T> getResultsFromDb() {
-        HibernateQuerier<T> q = getQuerier();
+    public List<D> getResultsFromDb() {
+        HibernateQuerier<D> q = getQuerier();
         HibernateQueryBuilder qb = getQueryBuilder();
         qb.setResponseClass(q.getTypeClass());
         q.setQueryString(qb.build());
@@ -32,16 +32,16 @@ public class IndexRequestHandler<T extends RegistryModel> extends RequestHandler
 
     public ResponseEntity<String> createResponseEntity() {
         ResponseEntity<String> responseEntity = null;
-        List<T> object = getResultsFromDb();
+        List<D> object = getResultsFromDb();
         responseEntity = ResponseEntity.ok().body(serializeObject(object));
         return responseEntity;
     }
 
-    public void setQuerier(HibernateQuerier<T> querier) {
+    public void setQuerier(HibernateQuerier<D> querier) {
         this.querier = querier;
     }
 
-    public HibernateQuerier<T> getQuerier() {
+    public HibernateQuerier<D> getQuerier() {
         return querier;
     }
 

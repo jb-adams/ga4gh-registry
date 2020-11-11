@@ -13,30 +13,80 @@ import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-public class RequestHandler<T extends RegistryModel> implements RequestHandlerI<T> {
+public class RequestHandler<B extends RegistryModel, D extends RegistryModel, R extends RegistryModel> implements RequestHandlerI<B, D, R> {
 
-    private Class<T> responseClass;
-    private Map<String, String> requestVariablesA; // path, query, or header
-    private Map<String, String> requestVariablesB; // path, query, or header
-    private Map<String, String> requestVariablesC; // path, query, or header
-    private T requestBody;
+    private Class<B> requestBodyClass; // the class passed on request body
+    private Class<D> dbEntityClass; // the class/entity/table queried from DB
+    private Class<R> responseBodyClass; // the class passed back to client
+    private Map<String, String> pathParams;
+    private Map<String, String> queryParams;
+    private Map<String, String> headerParams;
+    private B requestBody;
     private RegistrySerializerModule serializerModule;
     private String idPathParameterName;
 
     @Autowired
     private HibernateUtil hibernateUtil;
 
-    /* Constructor */
+    /* Constructors */
 
+    // All Generic Types are the same
     @Autowired
-    public RequestHandler(Class<T> responseClass, RegistrySerializerModule serializerModule) {
-        setResponseClass(responseClass);
+    @SuppressWarnings("unchecked")
+    public RequestHandler(Class<B> allClasses, RegistrySerializerModule serializerModule) {
+        setRequestBodyClass(allClasses);
+        setDbEntityClass((Class<D>) allClasses);
+        setResponseBodyClass((Class<R>) allClasses);
         setSerializerModule(serializerModule);
     }
 
+    // Request Body and DB Query classes are shared, different response body class
     @Autowired
-    public RequestHandler(Class<T> responseClass, RegistrySerializerModule serializerModule, String idPathParameterName) {
-        setResponseClass(responseClass);
+    @SuppressWarnings("unchecked")
+    public RequestHandler(Class<B> requestBodyDbQueryClasses, Class<R> responseBodyClass, RegistrySerializerModule serializerModule) {
+        setRequestBodyClass(requestBodyDbQueryClasses);
+        setDbEntityClass((Class<D>) requestBodyDbQueryClasses);
+        setResponseBodyClass(responseBodyClass);
+        setSerializerModule(serializerModule);
+    }
+
+    // All Generic Types are different
+    @Autowired
+    public RequestHandler(Class<B> requestBodyClass, Class<D> dbEntityClass, Class<R> responseBodyClass, RegistrySerializerModule serializerModule) {
+        setRequestBodyClass(requestBodyClass);
+        setDbEntityClass(dbEntityClass);
+        setResponseBodyClass(responseBodyClass);
+        setSerializerModule(serializerModule);
+    }
+
+    // All Generic Types are the same
+    @Autowired
+    @SuppressWarnings("unchecked")
+    public RequestHandler(Class<B> allClasses, RegistrySerializerModule serializerModule, String idPathParameterName) {
+        setRequestBodyClass(allClasses);
+        setDbEntityClass((Class<D>) allClasses);
+        setResponseBodyClass((Class<R>) allClasses);
+        setSerializerModule(serializerModule);
+        setIdPathParameterName(idPathParameterName);
+    }
+
+    // Request Body and DB Query classes are shared, different response body class
+    @Autowired
+    @SuppressWarnings("unchecked")
+    public RequestHandler(Class<B> requestBodyDbQueryClasses, Class<R> responseBodyClass, RegistrySerializerModule serializerModule, String idPathParameterName) {
+        setRequestBodyClass(requestBodyDbQueryClasses);
+        setDbEntityClass((Class<D>) requestBodyDbQueryClasses);
+        setResponseBodyClass(responseBodyClass);
+        setSerializerModule(serializerModule);
+        setIdPathParameterName(idPathParameterName);
+    }
+
+    // All Generic Types are different
+    @Autowired
+    public RequestHandler(Class<B> requestBodyClass, Class<D> dbEntityClass, Class<R> responseBodyClass, RegistrySerializerModule serializerModule, String idPathParameterName) {
+        setRequestBodyClass(requestBodyClass);
+        setDbEntityClass(dbEntityClass);
+        setResponseBodyClass(responseBodyClass);
         setSerializerModule(serializerModule);
         setIdPathParameterName(idPathParameterName);
     }
@@ -44,24 +94,23 @@ public class RequestHandler<T extends RegistryModel> implements RequestHandlerI<
     /* Custom Methods */
 
     public String getIdOnPath() {
-        Map<String, String> pathVariables = getRequestVariablesA();
-        return pathVariables.get(getIdPathParameterName());
+        return getPathParams().get(getIdPathParameterName());
     }
 
     @SuppressWarnings("unchecked")
-    public T getObjectById(String id) throws BadRequestException, ResourceNotFoundException {
-        return (T) getHibernateUtil().readEntityObject(getResponseClass(), id);
+    public D getObjectById(String id) throws BadRequestException, ResourceNotFoundException {
+        return (D) getHibernateUtil().readEntityObject(getDbEntityClass(), id);
     }
 
     public void validateObjectByIdExists(String id) {
-        T object = getObjectById(id);
+        D object = getObjectById(id);
         if (object == null) {
             throw new ResourceNotFoundException("no " + getEntityClassName() + " by the id: " + id.toString());
         }
     }
 
     public void validateObjectByIdDoesNotExist(String id) {
-        T object = getObjectById(id);
+        D object = getObjectById(id);
         if (object != null) {
             throw new BadRequestException("another " + getEntityClassName() + " already exists by id: " + id.toString());
         }
@@ -79,7 +128,7 @@ public class RequestHandler<T extends RegistryModel> implements RequestHandlerI<
         return serialized;
     }
 
-    public String serializeObject(List<T> object) {
+    public String serializeObject(List<R> object) {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(getSerializerModule());
@@ -96,7 +145,7 @@ public class RequestHandler<T extends RegistryModel> implements RequestHandlerI<
         
     }
 
-    public T preProcessRequestBody(T requestBody) throws ResourceNotFoundException {
+    public B preProcessRequestBody(B requestBody) throws ResourceNotFoundException {
         return requestBody;
     }
 
@@ -106,57 +155,65 @@ public class RequestHandler<T extends RegistryModel> implements RequestHandlerI<
     }
 
     private String getEntityClassName() {
-        return getResponseClass().getSimpleName();
+        return getDbEntityClass().getSimpleName();
     }
 
     /* Setters and Getters */
 
-    public void setResponseClass(Class<T> responseClass) {
-        this.responseClass = responseClass;
+    public void setRequestBodyClass(Class<B> requestBodyClass) {
+        this.requestBodyClass = requestBodyClass;
     }
 
-    public Class<T> getResponseClass() {
-        return responseClass;
+    public Class<B> getRequestBodyClass() {
+        return requestBodyClass;
     }
 
-    public void setRequestVariablesA(Map<String, String> requestVariablesA) {
-        this.requestVariablesA = requestVariablesA;
+    public void setDbEntityClass(Class<D> dbEntityClass) {
+        this.dbEntityClass = dbEntityClass;
     }
 
-    public Map<String, String> getRequestVariablesA() {
-        return requestVariablesA;
+    public Class<D> getDbEntityClass() {
+        return dbEntityClass;
     }
 
-    public void setRequestVariablesB(Map<String, String> requestVariablesB) {
-        this.requestVariablesB = requestVariablesB;
+    public void setResponseBodyClass(Class<R> responseBodyClass) {
+        this.responseBodyClass = responseBodyClass;
     }
 
-    public Map<String, String> getRequestVariablesB() {
-        return requestVariablesB;
+    public Class<R> getResponseBodyClass() {
+        return responseBodyClass;
     }
 
-    public void setRequestVariablesC(Map<String, String> requestVariablesC) {
-        this.requestVariablesC = requestVariablesC;
+    public void setPathParams(Map<String, String> pathParams) {
+        this.pathParams = pathParams;
     }
 
-    public Map<String, String> getRequestVariablesC() {
-        return requestVariablesC;
+    public Map<String, String> getPathParams() {
+        return pathParams;
     }
 
-    public void setRequestBody(T requestBody) {
+    public void setQueryParams(Map<String, String> queryParams) {
+        this.queryParams = queryParams;
+    }
+
+    public Map<String, String> getQueryParams() {
+        return queryParams;
+    }
+
+    public void setHeaderParams(Map<String, String> headerParams) {
+        this.headerParams = headerParams;
+    }
+
+    public Map<String, String> getHeaderParams() {
+        return headerParams;
+    }
+
+    public void setRequestBody(B requestBody) {
         this.requestBody = requestBody;
     }
 
-    public T getRequestBody() {
+    public B getRequestBody() {
         return requestBody;
-    }
-
-    public void setHibernateUtil(HibernateUtil hibernateUtil) {
-        this.hibernateUtil = hibernateUtil;
-    }
-
-    public HibernateUtil getHibernateUtil() {
-        return hibernateUtil;
     }
 
     public void setSerializerModule(RegistrySerializerModule serializerModule) {
@@ -173,5 +230,13 @@ public class RequestHandler<T extends RegistryModel> implements RequestHandlerI<
 
     public String getIdPathParameterName() {
         return idPathParameterName;
+    }
+
+    public void setHibernateUtil(HibernateUtil hibernateUtil) {
+        this.hibernateUtil = hibernateUtil;
+    }
+
+    public HibernateUtil getHibernateUtil() {
+        return hibernateUtil;
     }
 }

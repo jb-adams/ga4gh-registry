@@ -25,23 +25,23 @@ public class Organizations {
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_ORGANIZATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Organization> indexOrganization;
+    RequestHandlerFactory<Organization, Organization, Organization> indexOrganization;
 
     @Autowired
     @Qualifier(AppConfigConstants.SHOW_ORGANIZATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Organization> showOrganization;
+    RequestHandlerFactory<Organization, Organization, Organization> showOrganization;
 
     @Autowired
     @Qualifier(AppConfigConstants.POST_ORGANIZATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Organization> postOrganization;
+    RequestHandlerFactory<Organization, Organization, Organization> postOrganization;
 
     @Autowired
     @Qualifier(AppConfigConstants.PUT_ORGANIZATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Organization> putOrganization;
+    RequestHandlerFactory<Organization, Organization, Organization> putOrganization;
 
     @Autowired
     @Qualifier(AppConfigConstants.DELETE_ORGANIZATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Organization> deleteOrganization;
+    RequestHandlerFactory<Organization, Organization, Organization> deleteOrganization;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> getOrganizations() {
@@ -49,8 +49,8 @@ public class Organizations {
     }
 
     @GetMapping(path = "/{organizationId:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> getOrganizationById(@PathVariable Map<String, String> pathVariables) {
-        return showOrganization.handleRequest(pathVariables);
+    public ResponseEntity<String> getOrganizationById(@PathVariable Map<String, String> pathParams) {
+        return showOrganization.handleRequest(pathParams);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -59,12 +59,12 @@ public class Organizations {
     }
 
     @PutMapping(path = "/{organizationId:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> updateOrganizationById(@PathVariable Map<String, String> pathVariables, @RequestBody Organization organization) {
-        return putOrganization.handleRequest(pathVariables, organization);        
+    public ResponseEntity<String> updateOrganizationById(@PathVariable Map<String, String> pathParams, @RequestBody Organization organization) {
+        return putOrganization.handleRequest(pathParams, organization);        
     }
 
     @DeleteMapping(path = "/{organizationId:.+}")
-    public ResponseEntity<String> deleteOrganizationById(@PathVariable Map<String, String> pathVariables) {
-        return deleteOrganization.handleRequest(pathVariables);
+    public ResponseEntity<String> deleteOrganizationById(@PathVariable Map<String, String> pathParams) {
+        return deleteOrganization.handleRequest(pathParams);
     }   
 }

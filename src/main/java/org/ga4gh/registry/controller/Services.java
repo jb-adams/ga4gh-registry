@@ -26,31 +26,31 @@ public class Services {
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_SERVICE_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> indexService;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> indexService;
 
     @Autowired
     @Qualifier(AppConfigConstants.SHOW_SERVICE_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> showService;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> showService;
 
     @Autowired
     @Qualifier(AppConfigConstants.POST_SERVICE_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> postService;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> postService;
 
     @Autowired
     @Qualifier(AppConfigConstants.PUT_SERVICE_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> putService;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> putService;
 
     @Autowired
     @Qualifier(AppConfigConstants.DELETE_SERVICE_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> deleteService;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> deleteService;
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_SERVICE_TYPES_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> indexServiceType;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> indexServiceType;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> getServices(@RequestParam Map<String, String> queryVariables) {
-        return indexService.handleRequest(queryVariables);
+        return indexService.handleRequest(null, queryVariables);
     }
 
     @GetMapping(path = "/{serviceId:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -64,13 +64,13 @@ public class Services {
     }
 
     @PutMapping(path = "/{serviceId:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> updateServiceById(@PathVariable Map<String, String> pathVariables, @RequestBody Implementation implementation) {
-        return putService.handleRequest(pathVariables, implementation);
+    public ResponseEntity<String> updateServiceById(@PathVariable Map<String, String> pathParams, @RequestBody Implementation implementation) {
+        return putService.handleRequest(pathParams, implementation);
     }
 
     @DeleteMapping(path = "/{serviceId:.+}")
-    public ResponseEntity<String> deleteServiceById(@PathVariable Map<String, String> pathVariables) {
-        return deleteService.handleRequest(pathVariables);
+    public ResponseEntity<String> deleteServiceById(@PathVariable Map<String, String> pathParams) {
+        return deleteService.handleRequest(pathParams);
     }
 
     @GetMapping(path = "/types", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

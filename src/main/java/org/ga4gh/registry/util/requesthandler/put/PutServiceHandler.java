@@ -6,7 +6,7 @@ import org.ga4gh.registry.util.requesthandler.utils.ImplementationRequestUtils;
 import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class PutServiceHandler extends PutRequestHandler<Implementation> {
+public class PutServiceHandler extends PutRequestHandler<Implementation, Implementation, Implementation> {
 
     @Autowired
     ImplementationRequestUtils implementationRequestUtils;

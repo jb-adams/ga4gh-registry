@@ -16,7 +16,7 @@ import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 import org.ga4gh.registry.util.uriresolver.URIResolver;
 import org.springframework.http.ResponseEntity;
 
-public class ResolveURIHandler extends IndexRequestHandler<Implementation> {
+public class ResolveURIHandler extends IndexRequestHandler<Implementation, Implementation, Implementation> {
 
     public ResolveURIHandler(Class<Implementation> responseClass, RegistrySerializerModule serializerModule, HibernateQuerier<Implementation> querier) {
         super(responseClass, serializerModule, querier);
@@ -25,7 +25,7 @@ public class ResolveURIHandler extends IndexRequestHandler<Implementation> {
     public ResponseEntity<String> createResponseEntity() {
 
         try {
-            String uriString = getRequestVariablesA().get("uri");
+            String uriString = getPathParams().get("uri");
             Curie curie = Curie.fromString(uriString);
             Implementation service = getServiceMatchingCuriePrefix(curie.getPrefix());
             if (service == null) {

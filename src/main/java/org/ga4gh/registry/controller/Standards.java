@@ -25,23 +25,23 @@ public class Standards {
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_STANDARD_HANDLER_FACTORY)
-    RequestHandlerFactory<Standard> indexStandard;
+    RequestHandlerFactory<Standard, Standard, Standard> indexStandard;
 
     @Autowired
     @Qualifier(AppConfigConstants.SHOW_STANDARD_HANDLER_FACTORY)
-    RequestHandlerFactory<Standard> showStandard;
+    RequestHandlerFactory<Standard, Standard, Standard> showStandard;
 
     @Autowired
     @Qualifier(AppConfigConstants.POST_STANDARD_HANDLER_FACTORY)
-    RequestHandlerFactory<Standard> postStandard;
+    RequestHandlerFactory<Standard, Standard, Standard> postStandard;
 
     @Autowired
     @Qualifier(AppConfigConstants.PUT_STANDARD_HANDLER_FACTORY)
-    RequestHandlerFactory<Standard> putStandard;
+    RequestHandlerFactory<Standard, Standard, Standard> putStandard;
 
     @Autowired
     @Qualifier(AppConfigConstants.DELETE_STANDARD_HANDLER_FACTORY)
-    RequestHandlerFactory<Standard> deleteStandard;
+    RequestHandlerFactory<Standard, Standard, Standard> deleteStandard;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> getStandards() {
@@ -49,8 +49,8 @@ public class Standards {
     }
 
     @GetMapping(path = "/{standardId:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> getStandardById(@PathVariable Map<String, String> pathVariables) {
-        return showStandard.handleRequest(pathVariables);
+    public ResponseEntity<String> getStandardById(@PathVariable Map<String, String> pathParams) {
+        return showStandard.handleRequest(pathParams);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -59,12 +59,12 @@ public class Standards {
     }
 
     @PutMapping(path = "/{standardId:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> updateStandardById(@PathVariable Map<String, String> pathVariables, @RequestBody Standard standard) {
-        return putStandard.handleRequest(pathVariables, standard);
+    public ResponseEntity<String> updateStandardById(@PathVariable Map<String, String> pathParams, @RequestBody Standard standard) {
+        return putStandard.handleRequest(pathParams, standard);
     }
 
     @DeleteMapping(path = "/{standardId:.+}")
-    public ResponseEntity<String> deleteStandardById(@PathVariable Map<String, String> pathVariables) {
-        return deleteStandard.handleRequest(pathVariables);
+    public ResponseEntity<String> deleteStandardById(@PathVariable Map<String, String> pathParams) {
+        return deleteStandard.handleRequest(pathParams);
     }
 }

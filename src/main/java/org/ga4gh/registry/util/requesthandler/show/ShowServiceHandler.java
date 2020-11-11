@@ -5,7 +5,7 @@ import org.ga4gh.registry.model.Implementation;
 import org.ga4gh.registry.model.ImplementationCategory;
 import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 
-public class ShowServiceHandler extends ShowRequestHandler<Implementation> {
+public class ShowServiceHandler extends ShowRequestHandler<Implementation, Implementation, Implementation> {
 
     public ShowServiceHandler(Class<Implementation> responseClass, RegistrySerializerModule serializerModule, String idPathParameterName) {
         super(responseClass, serializerModule, idPathParameterName);

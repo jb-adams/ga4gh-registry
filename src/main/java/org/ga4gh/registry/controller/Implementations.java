@@ -26,32 +26,32 @@ public class Implementations {
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_IMPLEMENTATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> indexImplementation;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> indexImplementation;
 
     @Autowired
     @Qualifier(AppConfigConstants.SHOW_IMPLEMENTATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> showImplementation;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> showImplementation;
 
     @Autowired
     @Qualifier(AppConfigConstants.POST_IMPLEMENTATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> postImplementation;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> postImplementation;
 
     @Autowired
     @Qualifier(AppConfigConstants.PUT_IMPLEMENTATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> putImplementation;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> putImplementation;
 
     @Autowired
     @Qualifier(AppConfigConstants.DELETE_IMPLEMENTATION_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation> deleteImplementation;
+    RequestHandlerFactory<Implementation, Implementation, Implementation> deleteImplementation;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> getImplementations(@RequestParam Map<String, String> queryVariables) {
-        return indexImplementation.handleRequest(queryVariables);
+    public ResponseEntity<String> getImplementations(@RequestParam Map<String, String> queryParams) {
+        return indexImplementation.handleRequest(null, queryParams);
     }
 
     @GetMapping(path = "/{implementationId:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> getImplementationById(@PathVariable Map<String, String> pathVariables) {
-        return showImplementation.handleRequest(pathVariables);
+    public ResponseEntity<String> getImplementationById(@PathVariable Map<String, String> pathParams) {
+        return showImplementation.handleRequest(pathParams);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -60,12 +60,12 @@ public class Implementations {
     }
 
     @PutMapping(path = "/{implementationId:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> updateImplementationById(@PathVariable Map<String, String> pathVariables, @RequestBody Implementation implementation) {
-        return putImplementation.handleRequest(pathVariables, implementation);
+    public ResponseEntity<String> updateImplementationById(@PathVariable Map<String, String> pathParams, @RequestBody Implementation implementation) {
+        return putImplementation.handleRequest(pathParams, implementation);
     }
 
     @DeleteMapping(path = "/{implementationId:.+}")
-    public ResponseEntity<String> deleteImplementationById(@PathVariable Map<String, String> pathVariables) {
-        return deleteImplementation.handleRequest(pathVariables);
+    public ResponseEntity<String> deleteImplementationById(@PathVariable Map<String, String> pathParams) {
+        return deleteImplementation.handleRequest(pathParams);
     }
 }

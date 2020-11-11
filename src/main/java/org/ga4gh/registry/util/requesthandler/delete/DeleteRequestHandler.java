@@ -5,16 +5,16 @@ import org.ga4gh.registry.util.requesthandler.RequestHandler;
 import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 import org.springframework.http.ResponseEntity;
 
-public class DeleteRequestHandler<T extends RegistryModel> extends RequestHandler<T> {
+public class DeleteRequestHandler<B extends RegistryModel, D extends RegistryModel, R extends RegistryModel> extends RequestHandler<B, D, R> {
 
-    public DeleteRequestHandler(Class<T> responseClass, RegistrySerializerModule serializerModule, String idPathParameterName) {
-        super(responseClass, serializerModule, idPathParameterName);
+    public DeleteRequestHandler(Class<B> allClasses, RegistrySerializerModule serializerModule, String idPathParameterName) {
+        super(allClasses, serializerModule, idPathParameterName);
     }
 
     public ResponseEntity<String> createResponseEntity() {
         validateObjectByIdExists(getIdOnPath());
         validateRequest();
-        getHibernateUtil().deleteEntityObject(getResponseClass(), getIdOnPath());
+        getHibernateUtil().deleteEntityObject(getResponseBodyClass(), getIdOnPath());
         return ResponseEntity.ok().body("");
     }
 }
