@@ -1,11 +1,12 @@
 package org.ga4gh.registry.util.requesthandler.show;
 
+import org.ga4gh.registry.model.RegistryEntity;
 import org.ga4gh.registry.model.RegistryModel;
 import org.ga4gh.registry.util.requesthandler.RequestHandler;
 import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 import org.springframework.http.ResponseEntity;
 
-public class ShowRequestHandler<B extends RegistryModel, D extends RegistryModel, R extends RegistryModel> extends RequestHandler<B, D, R> {
+public class ShowRequestHandler<B extends RegistryModel, D extends RegistryEntity, R extends RegistryModel> extends RequestHandler<B, D, R> {
 
     public ShowRequestHandler(Class<B> allClasses, RegistrySerializerModule serializerModule, String idPathParameterName) {
         super(allClasses, serializerModule, idPathParameterName);

@@ -1,6 +1,8 @@
 package org.ga4gh.registry.util.requesthandler.index;
 
 import java.util.List;
+
+import org.ga4gh.registry.model.RegistryEntity;
 import org.ga4gh.registry.model.RegistryModel;
 import org.ga4gh.registry.util.requesthandler.RequestHandler;
 import org.ga4gh.registry.util.hibernate.HibernateQuerier;
@@ -9,7 +11,7 @@ import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-public class IndexRequestHandler<B extends RegistryModel, D extends RegistryModel, R extends RegistryModel> extends RequestHandler<B, D, R> {
+public class IndexRequestHandler<B extends RegistryModel, D extends RegistryEntity, R extends RegistryModel> extends RequestHandler<B, D, R> {
 
     HibernateQuerier<D> querier;
 
@@ -32,8 +34,9 @@ public class IndexRequestHandler<B extends RegistryModel, D extends RegistryMode
 
     public ResponseEntity<String> createResponseEntity() {
         ResponseEntity<String> responseEntity = null;
-        List<D> object = getResultsFromDb();
-        responseEntity = ResponseEntity.ok().body(serializeObject(object));
+        List<D> dbResults = getResultsFromDb();
+        List<R> response = transformDbResults(dbResults);
+        responseEntity = ResponseEntity.ok().body(serializeObject(response));
         return responseEntity;
     }
 

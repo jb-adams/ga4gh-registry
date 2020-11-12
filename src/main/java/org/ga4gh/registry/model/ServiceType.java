@@ -2,7 +2,7 @@ package org.ga4gh.registry.model;
 
 import org.ga4gh.registry.exception.BadRequestException;
 
-public class ServiceType {
+public class ServiceType implements RegistryModel {
 
     private String group;
     private String artifact;

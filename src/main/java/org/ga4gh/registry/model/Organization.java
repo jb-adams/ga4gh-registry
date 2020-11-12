@@ -13,7 +13,7 @@ import org.hibernate.Hibernate;
 
 @Entity
 @Table(name = "organization")
-public class Organization implements RegistryModel {
+public class Organization implements RegistryEntity {
 
     private static final String tableName = "organization";
 

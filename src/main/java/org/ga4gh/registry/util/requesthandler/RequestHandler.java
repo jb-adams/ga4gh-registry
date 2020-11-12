@@ -7,13 +7,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ga4gh.registry.exception.BadRequestException;
 import org.ga4gh.registry.exception.InternalServerError;
 import org.ga4gh.registry.exception.ResourceNotFoundException;
+import org.ga4gh.registry.model.RegistryEntity;
 import org.ga4gh.registry.model.RegistryModel;
 import org.ga4gh.registry.util.hibernate.HibernateUtil;
 import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-public class RequestHandler<B extends RegistryModel, D extends RegistryModel, R extends RegistryModel> implements RequestHandlerI<B, D, R> {
+public class RequestHandler<B extends RegistryModel, D extends RegistryEntity, R extends RegistryModel> implements RequestHandlerI<B, D, R> {
 
     private Class<B> requestBodyClass; // the class passed on request body
     private Class<D> dbEntityClass; // the class/entity/table queried from DB
@@ -147,6 +148,11 @@ public class RequestHandler<B extends RegistryModel, D extends RegistryModel, R 
 
     public B preProcessRequestBody(B requestBody) throws ResourceNotFoundException {
         return requestBody;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<R> transformDbResults(List<D> dbResults) {
+        return (List<R>) dbResults;
     }
 
     public ResponseEntity<String> createResponseEntity() {

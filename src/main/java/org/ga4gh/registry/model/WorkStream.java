@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="work_stream")
-public class WorkStream implements RegistryModel {
+public class WorkStream implements RegistryEntity {
 
     public static final String tableName = "work_stream";
 

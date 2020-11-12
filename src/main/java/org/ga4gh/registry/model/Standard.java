@@ -15,7 +15,7 @@ import org.hibernate.Hibernate;
 
 @Entity
 @Table(name="standard")
-public class Standard implements RegistryModel {
+public class Standard implements RegistryEntity {
 
     public static final String tableName = "standard";
 

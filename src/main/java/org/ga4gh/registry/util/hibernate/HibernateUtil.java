@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.PersistenceException;
 import org.ga4gh.registry.model.Implementation;
 import org.ga4gh.registry.model.Organization;
+import org.ga4gh.registry.model.RegistryEntity;
 import org.ga4gh.registry.model.RegistryModel;
 import org.ga4gh.registry.model.Standard;
 import org.ga4gh.registry.model.StandardCategory;
@@ -65,11 +66,11 @@ public class HibernateUtil {
         }
     }
 
-    public RegistryModel readEntityObject(Class<? extends RegistryModel> entityClass, String id) throws HibernateException {
+    public RegistryEntity readEntityObject(Class<? extends RegistryEntity> entityClass, String id) throws HibernateException {
         Session session = newTransaction();
-        RegistryModel object = null;
+        RegistryEntity object = null;
         try {
-            object = (RegistryModel) session.get(entityClass, id);
+            object = (RegistryEntity) session.get(entityClass, id);
             if (object != null) {
                 object.lazyLoad();
             }
@@ -84,7 +85,7 @@ public class HibernateUtil {
         return object;
     }
 
-    public void updateEntityObject(Class<? extends RegistryModel> entityClass, String oldId, String newId, RegistryModel newObject) throws HibernateException {
+    public void updateEntityObject(Class<? extends RegistryEntity> entityClass, String oldId, String newId, RegistryEntity newObject) throws HibernateException {
         Session session = newTransaction();
         try {
             // update the object at the existing id

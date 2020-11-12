@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "standard_category")
-public class StandardCategory implements RegistryModel {
+public class StandardCategory implements RegistryEntity {
 
     public static final String tableName = "standard_category";
 

@@ -1,12 +1,14 @@
 package org.ga4gh.registry.util.requesthandler;
 
 import java.util.Map;
+
+import org.ga4gh.registry.model.RegistryEntity;
 import org.ga4gh.registry.model.RegistryModel;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 
-public class RequestHandlerFactory<B extends RegistryModel, D extends RegistryModel, R extends RegistryModel> implements RequestHandlerFactoryI<B> {
+public class RequestHandlerFactory<B extends RegistryModel, D extends RegistryEntity, R extends RegistryModel> implements RequestHandlerFactoryI<B> {
 
     private ApplicationContext context;
     private Class<B> requestBodyClass; // the class passed on request body

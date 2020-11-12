@@ -1,11 +1,10 @@
 package org.ga4gh.registry.util.requesthandler;
 
-import org.ga4gh.registry.model.RegistryModel;
+import org.ga4gh.registry.model.RegistryEntity;
 
-public class SingleGenericRequestHandlerFactory<B extends RegistryModel> extends RequestHandlerFactory<B, B, B> {
+public class SingleGenericRequestHandlerFactory<D extends RegistryEntity> extends RequestHandlerFactory<D, D, D> {
 
-    public SingleGenericRequestHandlerFactory(Class <B> allClasses, String requestHandlerBeanName) {
+    public SingleGenericRequestHandlerFactory(Class <D> allClasses, String requestHandlerBeanName) {
         super(allClasses, requestHandlerBeanName);
     }
-    
 }

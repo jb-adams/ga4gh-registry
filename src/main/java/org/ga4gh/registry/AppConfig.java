@@ -22,6 +22,7 @@ import org.ga4gh.registry.util.requesthandler.index.IndexRequestHandler;
 import org.ga4gh.registry.util.requesthandler.index.IndexServiceTypesHandler;
 import org.ga4gh.registry.util.requesthandler.index.IndexServicesHandler;
 import org.ga4gh.registry.util.requesthandler.index.ResolveURIHandler;
+import org.ga4gh.registry.util.requesthandler.index.SingleGenericIndexRequestHandler;
 import org.ga4gh.registry.util.requesthandler.post.PostImplementationHandler;
 import org.ga4gh.registry.util.requesthandler.post.PostRequestHandler;
 import org.ga4gh.registry.util.requesthandler.post.PostServiceHandler;
@@ -119,11 +120,11 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean(name = AppConfigConstants.INDEX_STANDARD_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public IndexRequestHandler<Standard, Standard, Standard> standardIndexRequestHandler(
+    public SingleGenericIndexRequestHandler<Standard> standardIndexRequestHandler(
         @Qualifier (AppConfigConstants.BASIC_STANDARD_SERIALIZER_MODULE) RegistrySerializerModule serializerModule,
         @Qualifier (AppConfigConstants.STANDARD_HIBERNATE_QUERIER) HibernateQuerier<Standard> querier
     ) {
-        return new IndexRequestHandler<>(Standard.class, serializerModule, querier);
+        return new SingleGenericIndexRequestHandler<>(Standard.class, serializerModule, querier);
     }
 
     @Bean(name = AppConfigConstants.SHOW_STANDARD_HANDLER)
@@ -162,11 +163,11 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean(name = AppConfigConstants.INDEX_ORGANIZATION_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public IndexRequestHandler<Organization, Organization, Organization> organizationIndexRequestHandler(
+    public SingleGenericIndexRequestHandler<Organization> organizationIndexRequestHandler(
         @Qualifier (AppConfigConstants.BASIC_ORGANIZATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule,
         @Qualifier (AppConfigConstants.ORGANIZATION_HIBERNATE_QUERIER) HibernateQuerier<Organization> querier
     ) {
-        return new IndexRequestHandler<>(Organization.class, serializerModule, querier);
+        return new SingleGenericIndexRequestHandler<>(Organization.class, serializerModule, querier);
     }
 
     @Bean(name = AppConfigConstants.SHOW_ORGANIZATION_HANDLER)
@@ -467,8 +468,8 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean
     @Qualifier(AppConfigConstants.RESOLVE_URI_HANDLER_FACTORY)
-    public RequestHandlerFactory<URIResolution, URIResolution, URIResolution> resolveURIHandlerFactory() {
-        return new RequestHandlerFactory<>(URIResolution.class, AppConfigConstants.RESOLVE_URI_HANDLER);
+    public RequestHandlerFactory<Implementation, Implementation, URIResolution> resolveURIHandlerFactory() {
+        return new RequestHandlerFactory<>(Implementation.class, URIResolution.class, AppConfigConstants.RESOLVE_URI_HANDLER);
     }
 
     /* ******************************

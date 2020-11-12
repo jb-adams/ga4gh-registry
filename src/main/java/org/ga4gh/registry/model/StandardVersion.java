@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "standard_version")
-public class StandardVersion implements RegistryModel {
+public class StandardVersion implements RegistryEntity {
 
     public static final String tableName = "standard_version";
     

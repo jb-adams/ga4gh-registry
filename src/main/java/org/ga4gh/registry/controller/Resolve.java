@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.ga4gh.registry.AppConfigConstants;
+import org.ga4gh.registry.model.Implementation;
 import org.ga4gh.registry.model.URIResolution;
 import org.ga4gh.registry.util.requesthandler.RequestHandlerFactory;
 
@@ -22,7 +23,7 @@ public class Resolve {
 
     @Autowired
     @Qualifier(AppConfigConstants.RESOLVE_URI_HANDLER_FACTORY)
-    RequestHandlerFactory<URIResolution, URIResolution, URIResolution> resolveURIHandlerFactory;
+    RequestHandlerFactory<Implementation, Implementation, URIResolution> resolveURIHandlerFactory;
 
     @GetMapping(path = "/{uri:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> resolveURI(@PathVariable Map<String, String> pathParams) {

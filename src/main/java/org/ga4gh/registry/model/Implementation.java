@@ -20,7 +20,7 @@ import org.hibernate.annotations.TypeDef;
 @Entity
 @Table(name = "implementation")
 @TypeDef(name = "implementation_category_enum", typeClass = PostgreSQLEnumType.class)
-public class Implementation implements RegistryModel {
+public class Implementation implements RegistryEntity {
 
     private static final String tableName = "implementation";
 
