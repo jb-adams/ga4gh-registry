@@ -210,7 +210,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean(name = AppConfigConstants.INDEX_IMPLEMENTATION_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
     public IndexImplementationsHandler implementationIndexRequestHandler(
-        @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule,
+        @Qualifier(AppConfigConstants.PARTIAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule,
         @Qualifier(AppConfigConstants.IMPLEMENTATION_HIBERNATE_QUERIER) HibernateQuerier<Implementation> querier
     ) {
         return new IndexImplementationsHandler(Implementation.class, serializerModule, querier);
@@ -490,7 +490,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     @Qualifier(AppConfigConstants.RELATIONAL_STANDARD_SERIALIZER)
     public StandardSerializer relationalStandardSerializer() {
-        String[] relationalAttributes = {"description", "versions", "workStream"};
+        String[] relationalAttributes = {"versions", "implementations", "workStream"};
         return new StandardSerializer(relationalAttributes);
     }
 
@@ -529,7 +529,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     @Qualifier(AppConfigConstants.RELATIONAL_ORGANIZATION_SERIALIZER)
     public OrganizationSerializer relationalOrganizationSerializer() {
-        String[] relationalAttributes = {"implementations"};
+        String[] relationalAttributes = {"implementations", "services"};
         return new OrganizationSerializer(relationalAttributes);
     }
 
@@ -538,6 +538,12 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER)
     public ImplementationSerializer basicImplementationSerializer() {
+        return new ImplementationSerializer();
+    }
+
+    @Bean
+    @Qualifier(AppConfigConstants.PARTIAL_IMPLEMENTATION_SERIALIZER)
+    public ImplementationSerializer partialImplementationSerializer() {
         String[] relationalAttributes = {"organization"};
         return new ImplementationSerializer(relationalAttributes);
     }
@@ -623,12 +629,22 @@ public class AppConfig implements WebMvcConfigurer {
         @Qualifier(AppConfigConstants.BASIC_STANDARD_VERSION_SERIALIZER) StandardVersionSerializer standardVersionSerializer,
         @Qualifier(AppConfigConstants.BASIC_STANDARD_CATEGORY_SERIALIZER) StandardCategorySerializer standardCategorySerializer,
         @Qualifier(AppConfigConstants.BASIC_RELEASE_STATUS_SERIALIZER) ReleaseStatusSerializer releaseStatusSerializer,
-        @Qualifier(AppConfigConstants.BASIC_WORK_STREAM_SERIALIZER) WorkStreamSerializer workStreamSerializer
+        @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER) ImplementationSerializer implementationSerializer,
+        @Qualifier(AppConfigConstants.BASIC_WORK_STREAM_SERIALIZER) WorkStreamSerializer workStreamSerializer,
+        @Qualifier(AppConfigConstants.BASIC_DATE_SERIALIZER) DateSerializer dateSerializer
     ) {
         return new RegistrySerializerModule(
             AppConfigConstants.RELATIONAL_STANDARD_SERIALIZER_MODULE,
             RegistrySerializerModuleHelper.newVersion("standard"),
-            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {standardSerializer, standardVersionSerializer, standardCategorySerializer, releaseStatusSerializer, workStreamSerializer})
+            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {
+                standardSerializer,
+                standardVersionSerializer,
+                standardCategorySerializer,
+                releaseStatusSerializer,
+                implementationSerializer,
+                workStreamSerializer,
+                dateSerializer
+            })
         );
     }
 
@@ -650,27 +666,39 @@ public class AppConfig implements WebMvcConfigurer {
     @Qualifier(AppConfigConstants.RELATIONAL_ORGANIZATION_SERIALIZER_MODULE)
     public RegistrySerializerModule relationalOrganizationSerializerModule(
         @Qualifier(AppConfigConstants.RELATIONAL_ORGANIZATION_SERIALIZER) OrganizationSerializer organizationSerializer,
-        @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER) ImplementationSerializer implementationSerializer
+        @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER) ImplementationSerializer implementationSerializer,
+        @Qualifier(AppConfigConstants.BASIC_SERVICE_SERIALIZER) ServiceSerializer serviceSerializer,
+        @Qualifier(AppConfigConstants.BASIC_DATE_SERIALIZER) DateSerializer dateSerializer
     ) {
         return new RegistrySerializerModule(
             AppConfigConstants.RELATIONAL_ORGANIZATION_SERIALIZER_MODULE,
             RegistrySerializerModuleHelper.newVersion("organization"),
-            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {organizationSerializer, implementationSerializer})
+            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {
+                organizationSerializer,
+                implementationSerializer,
+                serviceSerializer,
+                dateSerializer
+            })
         );
     }
 
     /* IMPLEMENTATION SERIALIZER MODULE BEANS */
 
     @Bean
-    @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER_MODULE)
+    @Qualifier(AppConfigConstants.PARTIAL_IMPLEMENTATION_SERIALIZER_MODULE)
     public RegistrySerializerModule basicImplementationSerializerModule(
-        @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER) ImplementationSerializer implementationSerializer,
-        @Qualifier(AppConfigConstants.BASIC_ORGANIZATION_SERIALIZER) OrganizationSerializer organizationSerializer
+        @Qualifier(AppConfigConstants.PARTIAL_IMPLEMENTATION_SERIALIZER) ImplementationSerializer implementationSerializer,
+        @Qualifier(AppConfigConstants.BASIC_ORGANIZATION_SERIALIZER) OrganizationSerializer organizationSerializer,
+        @Qualifier(AppConfigConstants.BASIC_DATE_SERIALIZER) DateSerializer dateSerializer
     ) {
         return new RegistrySerializerModule(
-            AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER_MODULE,
+            AppConfigConstants.PARTIAL_IMPLEMENTATION_SERIALIZER_MODULE,
             RegistrySerializerModuleHelper.newVersion("implementation"),
-            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {implementationSerializer, organizationSerializer})
+            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {
+                implementationSerializer,
+                organizationSerializer,
+                dateSerializer
+            })
         );
     }
 

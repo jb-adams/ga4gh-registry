@@ -88,6 +88,7 @@ public class Standard implements RegistryEntity {
 
     public void lazyLoad() {
         Hibernate.initialize(getStandardVersions());
+        Hibernate.initialize(getImplementations());
     }
 
     public String getTableName() {

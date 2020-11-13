@@ -38,6 +38,11 @@ public class Organization implements RegistryEntity {
                cascade = CascadeType.ALL)
     private List<Implementation> implementations;
 
+    @OneToMany(mappedBy = "organization",
+               fetch = FetchType.LAZY,
+               cascade = CascadeType.ALL)
+    private List<Service> services;
+
     /* constructors */
 
     public Organization() {}
@@ -50,6 +55,7 @@ public class Organization implements RegistryEntity {
 
     public void lazyLoad() {
         Hibernate.initialize(getImplementations());
+        Hibernate.initialize(getServices());
     }
 
     public String getTableName() {
@@ -96,6 +102,14 @@ public class Organization implements RegistryEntity {
 
     public void setImplementations(List<Implementation> implementations) {
         this.implementations = implementations;
+    }
+
+    public List<Service> getServices() {
+        return services;
+    }
+
+    public void setServices(List<Service> services) {
+        this.services = services;
     }
 
     /* toString method */

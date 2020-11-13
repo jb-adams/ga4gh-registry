@@ -105,6 +105,7 @@ public class AppConfigConstants {
     public static final String RELATIONAL_ORGANIZATION_SERIALIZER = "relationalOrganizationSerializer";
     // IMPLEMENTATION
     public static final String BASIC_IMPLEMENTATION_SERIALIZER = "basicImplementationSerializer";
+    public static final String PARTIAL_IMPLEMENTATION_SERIALIZER = "partialImplementationSerializer";
     public static final String RELATIONAL_IMPLEMENTATION_SERIALIZER = "relationalImplementationSerializer";
     // SERVICE
     public static final String BASIC_SERVICE_SERIALIZER = "basicServiceSerializer";
@@ -135,6 +136,7 @@ public class AppConfigConstants {
     public static final String RELATIONAL_ORGANIZATION_SERIALIZER_MODULE = "relationalOrganizationSerializerModule";
     // IMPLEMENTATION
     public static final String BASIC_IMPLEMENTATION_SERIALIZER_MODULE = "basicImplementationSerializerModule";
+    public static final String PARTIAL_IMPLEMENTATION_SERIALIZER_MODULE = "partialImplementationSerializerModule";
     public static final String RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE = "relationalImplementationSerializerModule";
     // SERVICE
     public static final String BASIC_SERVICE_SERIALIZER_MODULE = "basicServiceSerializerModule";

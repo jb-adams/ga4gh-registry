@@ -26,6 +26,7 @@ public class OrganizationSerializer extends VariableDepthSerializer<Organization
         writeStringIfExists(gen, "shortName", value.getShortName());
         writeStringIfExists(gen, "url", value.getUrl());
         writeObjectIfSelected(gen, "implementations", value.getImplementations());
+        writeObjectIfSelected(gen, "services", value.getServices());
         gen.writeEndObject();
     }
 }
