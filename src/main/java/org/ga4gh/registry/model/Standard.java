@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -56,6 +58,14 @@ public class Standard implements RegistryEntity {
                fetch = FetchType.LAZY,
                cascade = {})//CascadeType.ALL)
     private List<StandardVersion> standardVersions;
+
+    @ManyToMany
+    @JoinTable(
+        name = "implementation_standard",
+        joinColumns = {@JoinColumn(name = "standard_id")},
+        inverseJoinColumns = {@JoinColumn(name = "implementation_id")}
+    )
+    private List<Implementation> implementations;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                           CascadeType.DETACH, CascadeType.REFRESH})
@@ -164,6 +174,14 @@ public class Standard implements RegistryEntity {
 
     public void setStandardVersions(List<StandardVersion> standardVersions) {
         this.standardVersions = standardVersions;
+    }
+
+    public List<Implementation> getImplementations() {
+        return implementations;
+    }
+
+    public void setImplementations(List<Implementation> implementations) {
+        this.implementations = implementations;
     }
 
     public WorkStream getWorkStream() {

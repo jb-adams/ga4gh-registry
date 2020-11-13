@@ -1,7 +1,6 @@
 package org.ga4gh.registry.util.requesthandler.index;
 
 import org.ga4gh.registry.model.RegistryEntity;
-import org.ga4gh.registry.model.RegistryModel;
 import org.ga4gh.registry.util.hibernate.HibernateQuerier;
 import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 

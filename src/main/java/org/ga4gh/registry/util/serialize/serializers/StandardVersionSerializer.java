@@ -26,7 +26,7 @@ public class StandardVersionSerializer extends VariableDepthSerializer<StandardV
         writeStringIfExists(gen, "versionNumber", value.getVersionNumber());
         writeStringIfExists(gen, "documentationUrl", value.getDocumentationUrl());
         writeObjectIfExists(gen, "status", value.getReleaseStatus());
-        writeObjectIfSelected(gen, "implementations", value.getImplementations());
+        writeObjectIfSelected(gen, "services", value.getServices());
         gen.writeEndObject();
     }
 }

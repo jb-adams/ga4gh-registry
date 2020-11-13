@@ -14,6 +14,7 @@ import org.ga4gh.registry.model.RegistryModel;
 import org.ga4gh.registry.model.Standard;
 import org.ga4gh.registry.model.StandardCategory;
 import org.ga4gh.registry.model.ReleaseStatus;
+import org.ga4gh.registry.model.Service;
 import org.ga4gh.registry.model.StandardVersion;
 import org.ga4gh.registry.model.WorkStream;
 
@@ -35,12 +36,13 @@ public class HibernateUtil {
             SessionFactory sessionFactory = 
                 new Configuration()
                 .setProperties(hibernateConfig.getAllProperties())
-                .addAnnotatedClass(Implementation.class)
-                .addAnnotatedClass(Organization.class)
                 .addAnnotatedClass(Standard.class)
                 .addAnnotatedClass(StandardCategory.class)
-                .addAnnotatedClass(ReleaseStatus.class)
                 .addAnnotatedClass(StandardVersion.class)
+                .addAnnotatedClass(ReleaseStatus.class)
+                .addAnnotatedClass(Organization.class)
+                .addAnnotatedClass(Implementation.class)
+                .addAnnotatedClass(Service.class)
                 .addAnnotatedClass(WorkStream.class)
                 .buildSessionFactory();
             setSessionFactory(sessionFactory);

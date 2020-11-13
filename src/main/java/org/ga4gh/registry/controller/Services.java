@@ -2,7 +2,8 @@ package org.ga4gh.registry.controller;
 
 import java.util.Map;
 import org.ga4gh.registry.AppConfigConstants;
-import org.ga4gh.registry.model.Implementation;
+import org.ga4gh.registry.model.Service;
+import org.ga4gh.registry.model.ServiceType;
 import org.ga4gh.registry.util.requesthandler.RequestHandlerFactory;
 import org.ga4gh.registry.util.requesthandler.SingleGenericRequestHandlerFactory;
 import org.springframework.http.MediaType;
@@ -27,27 +28,27 @@ public class Services {
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_SERVICE_HANDLER_FACTORY)
-    SingleGenericRequestHandlerFactory<Implementation> indexService;
+    SingleGenericRequestHandlerFactory<Service> indexService;
 
     @Autowired
     @Qualifier(AppConfigConstants.SHOW_SERVICE_HANDLER_FACTORY)
-    SingleGenericRequestHandlerFactory<Implementation> showService;
+    SingleGenericRequestHandlerFactory<Service> showService;
 
     @Autowired
     @Qualifier(AppConfigConstants.POST_SERVICE_HANDLER_FACTORY)
-    SingleGenericRequestHandlerFactory<Implementation> postService;
+    SingleGenericRequestHandlerFactory<Service> postService;
 
     @Autowired
     @Qualifier(AppConfigConstants.PUT_SERVICE_HANDLER_FACTORY)
-    SingleGenericRequestHandlerFactory<Implementation> putService;
+    SingleGenericRequestHandlerFactory<Service> putService;
 
     @Autowired
     @Qualifier(AppConfigConstants.DELETE_SERVICE_HANDLER_FACTORY)
-    SingleGenericRequestHandlerFactory<Implementation> deleteService;
+    SingleGenericRequestHandlerFactory<Service> deleteService;
 
     @Autowired
     @Qualifier(AppConfigConstants.INDEX_SERVICE_TYPES_HANDLER_FACTORY)
-    RequestHandlerFactory<Implementation, Implementation, Implementation> indexServiceType;
+    RequestHandlerFactory<Service, Service, ServiceType> indexServiceType;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> getServices(@RequestParam Map<String, String> queryVariables) {
@@ -60,13 +61,13 @@ public class Services {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> createService(@RequestBody Implementation implementation) {
-        return postService.handleRequest(implementation);
+    public ResponseEntity<String> createService(@RequestBody Service service) {
+        return postService.handleRequest(service);
     }
 
     @PutMapping(path = "/{serviceId:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> updateServiceById(@PathVariable Map<String, String> pathParams, @RequestBody Implementation implementation) {
-        return putService.handleRequest(pathParams, implementation);
+    public ResponseEntity<String> updateServiceById(@PathVariable Map<String, String> pathParams, @RequestBody Service service) {
+        return putService.handleRequest(pathParams, service);
     }
 
     @DeleteMapping(path = "/{serviceId:.+}")

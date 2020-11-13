@@ -40,7 +40,7 @@ public class StandardVersion implements RegistryEntity {
 
     @OneToMany(mappedBy="standardVersion",
                cascade=CascadeType.ALL)
-    private List<Implementation> implementations;
+    private List<Service> services;
 
     /* constructors */
 
@@ -103,12 +103,12 @@ public class StandardVersion implements RegistryEntity {
         this.releaseStatus = releaseStatus;
     }
 
-    public List<Implementation> getImplementations() {
-        return implementations;
+    public List<Service> getServices() {
+        return services;
     }
 
-    public void setImplementations(List<Implementation> implementations) {
-        this.implementations = implementations;
+    public void setServices(List<Service> services) {
+        this.services = services;
     }
 
     /* toString method */

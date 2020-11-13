@@ -3,8 +3,7 @@ package org.ga4gh.registry.util.requesthandler.utils;
 import org.ga4gh.registry.AppConfigConstants;
 import org.ga4gh.registry.exception.BadRequestException;
 import org.ga4gh.registry.exception.ResourceNotFoundException;
-import org.ga4gh.registry.model.Implementation;
-import org.ga4gh.registry.model.ImplementationCategory;
+import org.ga4gh.registry.model.Service;
 import org.ga4gh.registry.model.Organization;
 import org.ga4gh.registry.model.ServiceType;
 import org.ga4gh.registry.model.StandardVersion;
@@ -39,33 +38,10 @@ public class ImplementationRequestUtils {
         
     }
 
-    public Implementation preProcessImplementation(Implementation requestBody) throws ResourceNotFoundException {
-        setCategoryImplementation(requestBody);
+    public Service preProcessService(Service requestBody) throws ResourceNotFoundException {
         setStandardVersionFromType(requestBody);
         setOrganizationIfExists(requestBody);
         return requestBody;
-    }
-
-    public Implementation preProcessDeployment(Implementation requestBody) throws ResourceNotFoundException {
-        setCategoryDeployment(requestBody);
-        setStandardVersionFromType(requestBody);
-        setOrganizationIfExists(requestBody);
-        return requestBody;
-    }
-
-    private void setCategoryImplementation(Implementation requestBody) {
-        requestBody.setCategory(ImplementationCategory.implementation);
-    }
-
-    /**
-     * By definition, all Implementations created/updated via /services endpoints
-     * belong to the ImplementationCategory of 'deployment'. This method retrieves
-     * the appropriate ImplementationCategory from the db, and assigns it to the
-     * request Implementation
-     * @param requestBody Implementation object passed in request
-     */
-    private void setCategoryDeployment(Implementation requestBody) {
-        requestBody.setCategory(ImplementationCategory.deployment);
     }
 
     /**
@@ -75,7 +51,7 @@ public class ImplementationRequestUtils {
      * (if it exists) and sets it to the request Implementation
      * @param requestBody Implementation object passed in request
      */
-    private void setStandardVersionFromType(Implementation requestBody) throws ResourceNotFoundException {
+    private void setStandardVersionFromType(Service requestBody) throws ResourceNotFoundException {
         HibernateQueryBuilder qb = getSvQueryBuilder();
         HibernateQuerier<StandardVersion> querier = getSvQuerier();
         ServiceType type = requestBody.getType();
@@ -101,7 +77,7 @@ public class ImplementationRequestUtils {
      * the request implementation, if not, it will create a new organization.
      * @param requestBody Implementation object passed in request
      */
-    private void setOrganizationIfExists(Implementation requestBody) {
+    private void setOrganizationIfExists(Service requestBody) {
         Organization requestBodyOrg = requestBody.getOrganization();
         if (requestBodyOrg == null) {
             throw new BadRequestException("Service does not specify an organization");

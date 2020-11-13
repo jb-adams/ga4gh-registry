@@ -1,31 +1,32 @@
 package org.ga4gh.registry.model;
 
 import java.util.Date;
-import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.Hibernate;
-
 @Entity
-@Table(name = "implementation")
-public class Implementation implements RegistryEntity {
+@Table(name = "service")
+public class Service implements RegistryEntity {
 
-    private static final String tableName = "implementation";
+    private static final String tableName = "service";
 
     @Id
     @Column(name = "id")
     @NotNull
     private String id;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                          CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "standard_version_id")
+    private StandardVersion standardVersion;
 
     @Column(name = "name")
     private String name;
@@ -34,6 +35,7 @@ public class Implementation implements RegistryEntity {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER,
+               // cascade = CascadeType.ALL)
                cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                           CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "organization_id")
@@ -51,39 +53,42 @@ public class Implementation implements RegistryEntity {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @Column(name = "environment")
+    private String environment;
+
     @Column(name = "version")
     private String version;
 
-    @ManyToMany
-    @JoinTable(
-        name = "implementation_standard",
-        joinColumns = {@JoinColumn(name = "implementation_id")},
-        inverseJoinColumns = {@JoinColumn(name = "standard_id")}
-    )
-    private List<Standard> standards;
+    @Column(name = "url")
+    private String url;
 
-    /* Constructors */
+    @Column(name = "curie_prefix")
+    private String curiePrefix;
 
-    public Implementation() {
+    @Transient
+    private ServiceType type;
+
+    public Service() {
 
     }
 
-    public Implementation(String name, String description, String contactUrl,
-        String documentationUrl, Date createdAt, Date updatedAt, String version) {
-        
+    public Service(String name, String description, String contactUrl,
+        String documentationUrl, Date createdAt, Date updatedAt,
+        String environment, String version, String url) {
+
         this.name = name;
         this.description = description;
         this.contactUrl = contactUrl;
         this.documentationUrl = documentationUrl;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.environment = environment;
         this.version = version;
+        this.url = url;
     }
 
-    /* Override RegistryEntity */
-
     public void lazyLoad() {
-        Hibernate.initialize(getStandards());
+
     }
 
     public String getTableName() {
@@ -98,7 +103,13 @@ public class Implementation implements RegistryEntity {
         this.id = id;
     }
 
-    /* Setters and Getters */
+    public StandardVersion getStandardVersion() {
+        return standardVersion;
+    }
+
+    public void setStandardVersion(StandardVersion standardVersion) {
+        this.standardVersion = standardVersion;
+    }
 
     public String getName() {
         return name;
@@ -156,6 +167,14 @@ public class Implementation implements RegistryEntity {
         this.updatedAt = updatedAt;
     }
 
+    public String getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(String environment) {
+        this.environment = environment;
+    }
+
     public String getVersion() {
         return version;
     }
@@ -164,21 +183,53 @@ public class Implementation implements RegistryEntity {
         this.version = version;
     }
 
-    public List<Standard> getStandards() {
-        return standards;
+    public String getUrl() {
+        return url;
     }
 
-    public void setStandards(List<Standard> standards) {
-        this.standards = standards;
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getCuriePrefix() {
+        return curiePrefix;
+    }
+
+    public void setCuriePrefix(String curiePrefix) {
+        this.curiePrefix = curiePrefix;
+    }
+
+    public void setType(ServiceType type) {
+        this.type = type;
+    }
+
+    public ServiceType getType() {
+        return type;
+    }
+
+    public ServiceType getServiceType() {
+        ServiceType serviceType = new ServiceType();
+        if (getStandardVersion() != null) {
+            if (getStandardVersion().getStandard() != null) {
+                String artifact = getStandardVersion().getStandard().getArtifact();
+                String version = getStandardVersion().getVersionNumber();
+                serviceType.setGroup("org.ga4gh");
+                serviceType.setArtifact(artifact);
+                serviceType.setVersion(version);
+            }
+        }
+        return serviceType;
     }
 
     public String toString() {
-        return "Implementation ["
+        return "Service ["
                + "id=" + id + ", "
                + "name=" + name + ", "
                + "description=" + description + ", "
                + "contactUrl=" + contactUrl + ", "
                + "documentationUrl=" + documentationUrl + ", "
-               + "version=" + version + "]";
+               + "environment=" + environment + ", "
+               + "version=" + version + ", "
+               + "url=" + url + "]";
     }
 }

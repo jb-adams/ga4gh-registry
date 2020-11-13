@@ -10,16 +10,17 @@ import org.ga4gh.registry.exception.BadRequestException;
 import org.ga4gh.registry.exception.ResourceNotFoundException;
 import org.ga4gh.registry.model.Curie;
 import org.ga4gh.registry.model.Implementation;
+import org.ga4gh.registry.model.Service;
 import org.ga4gh.registry.util.hibernate.HibernateQuerier;
 import org.ga4gh.registry.util.hibernate.HibernateQueryBuilder;
 import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 import org.ga4gh.registry.util.uriresolver.URIResolver;
 import org.springframework.http.ResponseEntity;
 
-public class ResolveURIHandler extends IndexRequestHandler<Implementation, Implementation, Implementation> {
+public class ResolveURIHandler extends IndexRequestHandler<Service, Service, Service> {
 
-    public ResolveURIHandler(Class<Implementation> responseClass, RegistrySerializerModule serializerModule, HibernateQuerier<Implementation> querier) {
-        super(responseClass, serializerModule, querier);
+    public ResolveURIHandler(Class<Service> allClasses, RegistrySerializerModule serializerModule, HibernateQuerier<Service> querier) {
+        super(allClasses, serializerModule, querier);
     }
 
     public ResponseEntity<String> createResponseEntity() {
@@ -27,7 +28,7 @@ public class ResolveURIHandler extends IndexRequestHandler<Implementation, Imple
         try {
             String uriString = getPathParams().get("uri");
             Curie curie = Curie.fromString(uriString);
-            Implementation service = getServiceMatchingCuriePrefix(curie.getPrefix());
+            Service service = getServiceMatchingCuriePrefix(curie.getPrefix());
             if (service == null) {
                 throw new ResourceNotFoundException("There is no registered service with the CURIE prefix: '" + curie.getPrefix() + "'");
             }
@@ -41,8 +42,8 @@ public class ResolveURIHandler extends IndexRequestHandler<Implementation, Imple
         }
     }
 
-    private Implementation getServiceMatchingCuriePrefix(String curiePrefix) {
-        HibernateQuerier<Implementation> q = getQuerier();
+    private Service getServiceMatchingCuriePrefix(String curiePrefix) {
+        HibernateQuerier<Service> q = getQuerier();
         HibernateQueryBuilder qb = getQueryBuilder();
         qb.setResponseClass(q.getTypeClass());
         qb.filter("curiePrefix", curiePrefix);
@@ -50,7 +51,7 @@ public class ResolveURIHandler extends IndexRequestHandler<Implementation, Imple
         return q.getSingleResult();
     }
 
-    private String resolveURLForService(Implementation service, String id) {
+    private String resolveURLForService(Service service, String id) {
         String resolvedURL = null;
 
         Map<String, String> resolutionMethodByServiceType = new HashMap<>();

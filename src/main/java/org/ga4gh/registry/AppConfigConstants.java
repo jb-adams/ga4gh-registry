@@ -18,6 +18,7 @@ public class AppConfigConstants {
     public static final String STANDARD_VERSION_HIBERNATE_QUERIER = "standardVersionHibernateQuerier";
     public static final String ORGANIZATION_HIBERNATE_QUERIER = "organizationHibernateQuerier";
     public static final String IMPLEMENTATION_HIBERNATE_QUERIER = "implementationHibernateQuerier";
+    public static final String SERVICE_HIBERNATE_QUERIER = "serviceHibernateQuerier";
 
     /* ******************************
      * REQUEST HANDLER 
@@ -105,6 +106,9 @@ public class AppConfigConstants {
     // IMPLEMENTATION
     public static final String BASIC_IMPLEMENTATION_SERIALIZER = "basicImplementationSerializer";
     public static final String RELATIONAL_IMPLEMENTATION_SERIALIZER = "relationalImplementationSerializer";
+    // SERVICE
+    public static final String BASIC_SERVICE_SERIALIZER = "basicServiceSerializer";
+    public static final String RELATIONAL_SERVICE_SERIALIZER = "relationalServiceSerializer";
     // WORK STREAM
     public static final String BASIC_WORK_STREAM_SERIALIZER = "basicWorkStreamSerializer";
     // REGISTRY ERROR
@@ -132,6 +136,9 @@ public class AppConfigConstants {
     // IMPLEMENTATION
     public static final String BASIC_IMPLEMENTATION_SERIALIZER_MODULE = "basicImplementationSerializerModule";
     public static final String RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE = "relationalImplementationSerializerModule";
+    // SERVICE
+    public static final String BASIC_SERVICE_SERIALIZER_MODULE = "basicServiceSerializerModule";
+    public static final String RELATIONAL_SERVICE_SERIALIZER_MODULE = "relationalServiceSerializerModule";
     // REGISTRY ERROR
     public static final String BASIC_REGISTRY_ERROR_SERIALIZER_MODULE = "basicRegistryErrorSerializerModule";
     // SERVICE TYPE

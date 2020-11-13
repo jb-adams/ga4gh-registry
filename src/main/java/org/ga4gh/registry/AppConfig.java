@@ -6,6 +6,8 @@ import org.ga4gh.registry.exception.CustomErrorAttributes;
 import org.ga4gh.registry.middleware.AuthorizationInterceptor;
 import org.ga4gh.registry.model.Implementation;
 import org.ga4gh.registry.model.Organization;
+import org.ga4gh.registry.model.Service;
+import org.ga4gh.registry.model.ServiceType;
 import org.ga4gh.registry.model.Standard;
 import org.ga4gh.registry.model.StandardVersion;
 import org.ga4gh.registry.model.URIResolution;
@@ -14,26 +16,19 @@ import org.ga4gh.registry.util.hibernate.HibernateConfig;
 import org.ga4gh.registry.util.hibernate.HibernateUtil;
 import org.ga4gh.registry.util.requesthandler.RequestHandlerFactory;
 import org.ga4gh.registry.util.requesthandler.SingleGenericRequestHandlerFactory;
-import org.ga4gh.registry.util.requesthandler.delete.DeleteImplementationHandler;
-import org.ga4gh.registry.util.requesthandler.delete.DeleteRequestHandler;
-import org.ga4gh.registry.util.requesthandler.delete.DeleteServiceHandler;
+import org.ga4gh.registry.util.requesthandler.delete.SingleGenericDeleteRequestHandler;
 import org.ga4gh.registry.util.requesthandler.index.IndexImplementationsHandler;
-import org.ga4gh.registry.util.requesthandler.index.IndexRequestHandler;
 import org.ga4gh.registry.util.requesthandler.index.IndexServiceTypesHandler;
 import org.ga4gh.registry.util.requesthandler.index.IndexServicesHandler;
 import org.ga4gh.registry.util.requesthandler.index.ResolveURIHandler;
 import org.ga4gh.registry.util.requesthandler.index.SingleGenericIndexRequestHandler;
-import org.ga4gh.registry.util.requesthandler.post.PostImplementationHandler;
-import org.ga4gh.registry.util.requesthandler.post.PostRequestHandler;
 import org.ga4gh.registry.util.requesthandler.post.PostServiceHandler;
-import org.ga4gh.registry.util.requesthandler.put.PutImplementationHandler;
-import org.ga4gh.registry.util.requesthandler.put.PutRequestHandler;
+import org.ga4gh.registry.util.requesthandler.post.SingleGenericPostRequestHandler;
 import org.ga4gh.registry.util.requesthandler.put.PutServiceHandler;
+import org.ga4gh.registry.util.requesthandler.put.SingleGenericPutRequestHandler;
 import org.ga4gh.registry.util.requesthandler.utils.ImplementationRequestUtils;
-import org.ga4gh.registry.util.requesthandler.show.ShowImplementationHandler;
-import org.ga4gh.registry.util.requesthandler.show.ShowRequestHandler;
-import org.ga4gh.registry.util.requesthandler.show.ShowServiceHandler;
 import org.ga4gh.registry.util.requesthandler.show.ShowServiceInfoHandler;
+import org.ga4gh.registry.util.requesthandler.show.SingleGenericShowRequestHandler;
 import org.ga4gh.registry.util.hibernate.HibernateQuerier;
 import org.ga4gh.registry.util.hibernate.HibernateQueryBuilder;
 import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
@@ -43,6 +38,7 @@ import org.ga4gh.registry.util.serialize.serializers.ImplementationSerializer;
 import org.ga4gh.registry.util.serialize.serializers.OrganizationSerializer;
 import org.ga4gh.registry.util.serialize.serializers.RegistryErrorSerializer;
 import org.ga4gh.registry.util.serialize.serializers.ReleaseStatusSerializer;
+import org.ga4gh.registry.util.serialize.serializers.ServiceSerializer;
 import org.ga4gh.registry.util.serialize.serializers.ServiceTypeSerializer;
 import org.ga4gh.registry.util.serialize.serializers.StandardCategorySerializer;
 import org.ga4gh.registry.util.serialize.serializers.StandardSerializer;
@@ -112,6 +108,13 @@ public class AppConfig implements WebMvcConfigurer {
         return new HibernateQuerier<>(Implementation.class);
     }
 
+    @Bean
+    @Qualifier(AppConfigConstants.SERVICE_HIBERNATE_QUERIER)
+    @Scope(AppConfigConstants.PROTOTYPE)
+    public HibernateQuerier<Service> getServicesHibernateQuerier() {
+        return new HibernateQuerier<>(Service.class);
+    }
+
     /* ******************************
      * REQUEST HANDLER BEANS
      * ****************************** */
@@ -129,34 +132,34 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean(name = AppConfigConstants.SHOW_STANDARD_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public ShowRequestHandler<Standard, Standard, Standard> standardShowRequestHandler(
+    public SingleGenericShowRequestHandler<Standard> standardShowRequestHandler(
         @Qualifier (AppConfigConstants.RELATIONAL_STANDARD_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new ShowRequestHandler<>(Standard.class, serializerModule, AppConfigConstants.STANDARD_ID);
+        return new SingleGenericShowRequestHandler<>(Standard.class, serializerModule, AppConfigConstants.STANDARD_ID);
     }
 
     @Bean(name = AppConfigConstants.POST_STANDARD_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public PostRequestHandler<Standard, Standard, Standard> standardPostRequestHandler(
+    public SingleGenericPostRequestHandler<Standard> standardPostRequestHandler(
         @Qualifier (AppConfigConstants.RELATIONAL_STANDARD_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new PostRequestHandler<>(Standard.class, serializerModule);
+        return new SingleGenericPostRequestHandler<>(Standard.class, serializerModule);
     }
 
     @Bean(name = AppConfigConstants.PUT_STANDARD_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public PutRequestHandler<Standard, Standard, Standard> standardPutRequestHandler(
+    public SingleGenericPutRequestHandler<Standard> standardPutRequestHandler(
         @Qualifier (AppConfigConstants.RELATIONAL_STANDARD_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new PutRequestHandler<>(Standard.class, serializerModule, AppConfigConstants.STANDARD_ID);
+        return new SingleGenericPutRequestHandler<>(Standard.class, serializerModule, AppConfigConstants.STANDARD_ID);
     }
 
     @Bean(name = AppConfigConstants.DELETE_STANDARD_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public DeleteRequestHandler<Standard, Standard, Standard> standardDeleteRequestHandler(
+    public SingleGenericDeleteRequestHandler<Standard> standardDeleteRequestHandler(
         @Qualifier (AppConfigConstants.RELATIONAL_STANDARD_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new DeleteRequestHandler<>(Standard.class, serializerModule, AppConfigConstants.STANDARD_ID);
+        return new SingleGenericDeleteRequestHandler<>(Standard.class, serializerModule, AppConfigConstants.STANDARD_ID);
     }
 
     /* ORGANIZATION REQUEST HANDLER BEANS */
@@ -172,34 +175,34 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean(name = AppConfigConstants.SHOW_ORGANIZATION_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public ShowRequestHandler<Organization, Organization, Organization> organizationShowRequestHandler(
+    public SingleGenericShowRequestHandler<Organization> organizationShowRequestHandler(
         @Qualifier (AppConfigConstants.RELATIONAL_ORGANIZATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new ShowRequestHandler<>(Organization.class, serializerModule, AppConfigConstants.ORGANIZATION_ID);
+        return new SingleGenericShowRequestHandler<>(Organization.class, serializerModule, AppConfigConstants.ORGANIZATION_ID);
     }
 
     @Bean(name = AppConfigConstants.POST_ORGANIZATION_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public PostRequestHandler<Organization, Organization, Organization> organizationPostRequestHandler(
+    public SingleGenericPostRequestHandler<Organization> organizationPostRequestHandler(
         @Qualifier (AppConfigConstants.RELATIONAL_ORGANIZATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new PostRequestHandler<>(Organization.class, serializerModule);
+        return new SingleGenericPostRequestHandler<>(Organization.class, serializerModule);
     }
 
     @Bean(name = AppConfigConstants.PUT_ORGANIZATION_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public PutRequestHandler<Organization, Organization, Organization> organizationPutRequestHandler(
+    public SingleGenericPutRequestHandler<Organization> organizationPutRequestHandler(
         @Qualifier (AppConfigConstants.RELATIONAL_ORGANIZATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new PutRequestHandler<>(Organization.class, serializerModule, AppConfigConstants.ORGANIZATION_ID);
+        return new SingleGenericPutRequestHandler<>(Organization.class, serializerModule, AppConfigConstants.ORGANIZATION_ID);
     }
 
     @Bean(name = AppConfigConstants.DELETE_ORGANIZATION_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public DeleteRequestHandler<Organization, Organization, Organization> organizationDeleteRequestHandler(
+    public SingleGenericDeleteRequestHandler<Organization> organizationDeleteRequestHandler(
         @Qualifier(AppConfigConstants.RELATIONAL_ORGANIZATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new DeleteRequestHandler<>(Organization.class, serializerModule, AppConfigConstants.ORGANIZATION_ID);
+        return new SingleGenericDeleteRequestHandler<>(Organization.class, serializerModule, AppConfigConstants.ORGANIZATION_ID);
     }
 
     /* IMPLEMENTATION REQUEST HANDLER BEANS */
@@ -207,7 +210,7 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean(name = AppConfigConstants.INDEX_IMPLEMENTATION_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
     public IndexImplementationsHandler implementationIndexRequestHandler(
-        @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule,
+        @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule,
         @Qualifier(AppConfigConstants.IMPLEMENTATION_HIBERNATE_QUERIER) HibernateQuerier<Implementation> querier
     ) {
         return new IndexImplementationsHandler(Implementation.class, serializerModule, querier);
@@ -215,34 +218,34 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean(name = AppConfigConstants.SHOW_IMPLEMENTATION_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public ShowRequestHandler<Implementation, Implementation, Implementation> implementationShowRequestHandler(
+    public SingleGenericShowRequestHandler<Implementation> implementationShowRequestHandler(
         @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new ShowImplementationHandler(Implementation.class, serializerModule, AppConfigConstants.IMPLEMENTATION_ID);
+        return new SingleGenericShowRequestHandler<>(Implementation.class, serializerModule, AppConfigConstants.IMPLEMENTATION_ID);
     }
 
     @Bean(name = AppConfigConstants.POST_IMPLEMENTATION_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public PostRequestHandler<Implementation, Implementation, Implementation> implementationPostRequestHandler(
+    public SingleGenericPostRequestHandler<Implementation> implementationPostRequestHandler(
         @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new PostImplementationHandler(Implementation.class, serializerModule);
+        return new SingleGenericPostRequestHandler<>(Implementation.class, serializerModule);
     }
 
     @Bean(name = AppConfigConstants.PUT_IMPLEMENTATION_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public PutRequestHandler<Implementation, Implementation, Implementation> implementationPutRequestHandler(
+    public SingleGenericPutRequestHandler<Implementation> implementationPutRequestHandler(
         @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new PutImplementationHandler(Implementation.class, serializerModule, AppConfigConstants.IMPLEMENTATION_ID);
+        return new SingleGenericPutRequestHandler<>(Implementation.class, serializerModule, AppConfigConstants.IMPLEMENTATION_ID);
     }
 
     @Bean(name = AppConfigConstants.DELETE_IMPLEMENTATION_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public DeleteRequestHandler<Implementation, Implementation, Implementation> implementationDeleteRequestHandler(
+    public SingleGenericDeleteRequestHandler<Implementation> implementationDeleteRequestHandler(
         @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new DeleteImplementationHandler(Implementation.class, serializerModule, AppConfigConstants.IMPLEMENTATION_ID);
+        return new SingleGenericDeleteRequestHandler<>(Implementation.class, serializerModule, AppConfigConstants.IMPLEMENTATION_ID);
     }
 
     /* SERVICE REQUEST HANDLER BEANS */
@@ -250,51 +253,51 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean(name = AppConfigConstants.INDEX_SERVICE_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
     public IndexServicesHandler serviceIndexRequestHandler(
-        @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule,
-        @Qualifier(AppConfigConstants.IMPLEMENTATION_HIBERNATE_QUERIER) HibernateQuerier<Implementation> querier
+        @Qualifier(AppConfigConstants.RELATIONAL_SERVICE_SERIALIZER_MODULE) RegistrySerializerModule serializerModule,
+        @Qualifier(AppConfigConstants.SERVICE_HIBERNATE_QUERIER) HibernateQuerier<Service> querier
     ) {
-        return new IndexServicesHandler(Implementation.class, serializerModule, querier);
+        return new IndexServicesHandler(Service.class, serializerModule, querier);
     }
 
     @Bean(name = AppConfigConstants.SHOW_SERVICE_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public ShowRequestHandler<Implementation, Implementation, Implementation> serviceShowRequestHandler(
-        @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
+    public SingleGenericShowRequestHandler<Service> serviceShowRequestHandler(
+        @Qualifier(AppConfigConstants.RELATIONAL_SERVICE_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new ShowServiceHandler(Implementation.class, serializerModule, AppConfigConstants.SERVICE_ID);
+        return new SingleGenericShowRequestHandler<>(Service.class, serializerModule, AppConfigConstants.SERVICE_ID);
     }
 
     @Bean(name = AppConfigConstants.POST_SERVICE_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
     public PostServiceHandler servicePostRequestHandler(
-        @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
+        @Qualifier(AppConfigConstants.RELATIONAL_SERVICE_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new PostServiceHandler(Implementation.class, serializerModule);
+        return new PostServiceHandler(Service.class, serializerModule);
     }
 
     @Bean(name = AppConfigConstants.PUT_SERVICE_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
     public PutServiceHandler servicePutRequestHandler(
-        @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
+        @Qualifier(AppConfigConstants.RELATIONAL_SERVICE_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new PutServiceHandler(Implementation.class, serializerModule, AppConfigConstants.SERVICE_ID);
+        return new PutServiceHandler(Service.class, serializerModule, AppConfigConstants.SERVICE_ID);
     }
 
     @Bean(name = AppConfigConstants.DELETE_SERVICE_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
-    public DeleteRequestHandler<Implementation, Implementation, Implementation> serviceDeleteRequestHandler(
-        @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
+    public SingleGenericDeleteRequestHandler<Service> serviceDeleteRequestHandler(
+        @Qualifier(AppConfigConstants.RELATIONAL_SERVICE_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new DeleteServiceHandler(Implementation.class, serializerModule, AppConfigConstants.SERVICE_ID);
+        return new SingleGenericDeleteRequestHandler<>(Service.class, serializerModule, AppConfigConstants.SERVICE_ID);
     }
 
     @Bean(name = AppConfigConstants.INDEX_SERVICE_TYPES_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
     public IndexServiceTypesHandler serviceTypesHandler(
         @Qualifier(AppConfigConstants.BASIC_SERVICE_TYPE_SERIALIZER_MODULE) RegistrySerializerModule serializerModule,
-        @Qualifier(AppConfigConstants.IMPLEMENTATION_HIBERNATE_QUERIER) HibernateQuerier<Implementation> querier
+        @Qualifier(AppConfigConstants.SERVICE_HIBERNATE_QUERIER) HibernateQuerier<Service> querier
     ) {
-        return new IndexServiceTypesHandler(Implementation.class, serializerModule, querier);
+        return new IndexServiceTypesHandler(Service.class, ServiceType.class, serializerModule, querier);
     }
 
     /* SERVICE-INFO REQUEST HANDLER BEANS */
@@ -302,9 +305,9 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean(name = AppConfigConstants.SHOW_SERVICE_INFO_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
     public ShowServiceInfoHandler showServiceInfoRequestHandler(
-        @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
+        @Qualifier(AppConfigConstants.RELATIONAL_SERVICE_SERIALIZER_MODULE) RegistrySerializerModule serializerModule
     ) {
-        return new ShowServiceInfoHandler(Implementation.class, serializerModule, AppConfigConstants.SERVICE_ID);
+        return new ShowServiceInfoHandler(Service.class, serializerModule, AppConfigConstants.SERVICE_ID);
     }
 
     /* RESOLVE REQUEST HANDLER BEANS */
@@ -313,9 +316,9 @@ public class AppConfig implements WebMvcConfigurer {
     @Scope(AppConfigConstants.PROTOTYPE)
     public ResolveURIHandler resolveURIHandler(
         // SERIALIZER MODULE GOES HERE
-        @Qualifier(AppConfigConstants.IMPLEMENTATION_HIBERNATE_QUERIER) HibernateQuerier<Implementation> querier
+        @Qualifier(AppConfigConstants.IMPLEMENTATION_HIBERNATE_QUERIER) HibernateQuerier<Service> querier
     ) {
-        return new ResolveURIHandler(Implementation.class, null, querier);
+        return new ResolveURIHandler(Service.class, null, querier);
     }
 
     /* ******************************
@@ -422,46 +425,46 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean
     @Qualifier(AppConfigConstants.INDEX_SERVICE_HANDLER_FACTORY)
-    public SingleGenericRequestHandlerFactory<Implementation> indexServiceHandlerFactory() {
-        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.INDEX_SERVICE_HANDLER);
+    public SingleGenericRequestHandlerFactory<Service> indexServiceHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Service.class, AppConfigConstants.INDEX_SERVICE_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.SHOW_SERVICE_HANDLER_FACTORY)
-    public SingleGenericRequestHandlerFactory<Implementation> showServiceHandlerFactory() {
-        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.SHOW_SERVICE_HANDLER);
+    public SingleGenericRequestHandlerFactory<Service> showServiceHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Service.class, AppConfigConstants.SHOW_SERVICE_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.POST_SERVICE_HANDLER_FACTORY)
-    public SingleGenericRequestHandlerFactory<Implementation> postServiceHandlerFactory() {
-        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.POST_SERVICE_HANDLER);
+    public SingleGenericRequestHandlerFactory<Service> postServiceHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Service.class, AppConfigConstants.POST_SERVICE_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.PUT_SERVICE_HANDLER_FACTORY)
-    public SingleGenericRequestHandlerFactory<Implementation> putServiceHandlerFactory() {
-        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.PUT_SERVICE_HANDLER);
+    public SingleGenericRequestHandlerFactory<Service> putServiceHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Service.class, AppConfigConstants.PUT_SERVICE_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.DELETE_SERVICE_HANDLER_FACTORY)
-    public SingleGenericRequestHandlerFactory<Implementation> deleteServiceHandlerFactory() {
-        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.DELETE_SERVICE_HANDLER);
+    public SingleGenericRequestHandlerFactory<Service> deleteServiceHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Service.class, AppConfigConstants.DELETE_SERVICE_HANDLER);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.INDEX_SERVICE_TYPES_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, Implementation> indexServiceTypesHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, AppConfigConstants.INDEX_SERVICE_TYPES_HANDLER);
+    public RequestHandlerFactory<Service, Service, ServiceType> indexServiceTypesHandlerFactory() {
+        return new RequestHandlerFactory<>(Service.class, ServiceType.class, AppConfigConstants.INDEX_SERVICE_TYPES_HANDLER);
     }
 
     /* SERVICE-INFO REQUEST HANDLER FACTORY BEANS */
 
     @Bean
     @Qualifier(AppConfigConstants.SHOW_SERVICE_INFO_HANDLER_FACTORY)
-    public SingleGenericRequestHandlerFactory<Implementation> showServiceInfoHandlerFactory() {
-        return new SingleGenericRequestHandlerFactory<>(Implementation.class, AppConfigConstants.SHOW_SERVICE_INFO_HANDLER);
+    public SingleGenericRequestHandlerFactory<Service> showServiceInfoHandlerFactory() {
+        return new SingleGenericRequestHandlerFactory<>(Service.class, AppConfigConstants.SHOW_SERVICE_INFO_HANDLER);
     }
 
     /* RESOLVE REQUEST HANDLER FACTORY BEANS */
@@ -535,14 +538,30 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER)
     public ImplementationSerializer basicImplementationSerializer() {
-        return new ImplementationSerializer();
+        String[] relationalAttributes = {"organization"};
+        return new ImplementationSerializer(relationalAttributes);
     }
 
     @Bean
     @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER)
     public ImplementationSerializer relationalImplementationSerializer() {
-        String[] relationalAttributes = {"organization", "description", "contactUrl", "environment"};
+        String[] relationalAttributes = {"organization", "standards"};
         return new ImplementationSerializer(relationalAttributes);
+    }
+
+    /* SERVICE SERIALIZER BEANS */
+
+    @Bean
+    @Qualifier(AppConfigConstants.BASIC_SERVICE_SERIALIZER)
+    public ServiceSerializer basicServiceSerializer() {
+        return new ServiceSerializer();
+    }
+
+    @Bean
+    @Qualifier(AppConfigConstants.RELATIONAL_SERVICE_SERIALIZER)
+    public ServiceSerializer relationalServiceSerializer() {
+        String []relationalAttributes = {"organization"};
+        return new ServiceSerializer(relationalAttributes);
     }
 
     /* WORK STREAM SERIALIZER BEANS */
@@ -645,12 +664,13 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER_MODULE)
     public RegistrySerializerModule basicImplementationSerializerModule(
-        @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER) ImplementationSerializer implementationSerializer
+        @Qualifier(AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER) ImplementationSerializer implementationSerializer,
+        @Qualifier(AppConfigConstants.BASIC_ORGANIZATION_SERIALIZER) OrganizationSerializer organizationSerializer
     ) {
         return new RegistrySerializerModule(
             AppConfigConstants.BASIC_IMPLEMENTATION_SERIALIZER_MODULE,
             RegistrySerializerModuleHelper.newVersion("implementation"),
-            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {implementationSerializer})
+            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {implementationSerializer, organizationSerializer})
         );
     }
 
@@ -659,12 +679,50 @@ public class AppConfig implements WebMvcConfigurer {
     public RegistrySerializerModule relationalImplementationSerializerModule(
         @Qualifier(AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER) ImplementationSerializer implementationSerializer,
         @Qualifier(AppConfigConstants.BASIC_DATE_SERIALIZER) DateSerializer dateSerializer,
-        @Qualifier(AppConfigConstants.BASIC_ORGANIZATION_SERIALIZER) OrganizationSerializer organizationSerializer
+        @Qualifier(AppConfigConstants.BASIC_ORGANIZATION_SERIALIZER) OrganizationSerializer organizationSerializer,
+        @Qualifier(AppConfigConstants.BASIC_STANDARD_SERIALIZER) StandardSerializer standardSerializer,
+        @Qualifier(AppConfigConstants.BASIC_STANDARD_CATEGORY_SERIALIZER) StandardCategorySerializer standardCategorySerializer,
+        @Qualifier(AppConfigConstants.BASIC_RELEASE_STATUS_SERIALIZER) ReleaseStatusSerializer releaseStatusSerializer
     ) {
         return new RegistrySerializerModule(
             AppConfigConstants.RELATIONAL_IMPLEMENTATION_SERIALIZER_MODULE,
             RegistrySerializerModuleHelper.newVersion("implementation"),
-            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {implementationSerializer, dateSerializer, organizationSerializer})
+            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {
+                implementationSerializer,
+                dateSerializer,
+                organizationSerializer,
+                standardSerializer,
+                standardCategorySerializer,
+                releaseStatusSerializer}
+            )
+        );
+    }
+
+    /* SERVICE SERIALIZER MODULE BEANS */
+
+    @Bean
+    @Qualifier(AppConfigConstants.BASIC_SERVICE_SERIALIZER_MODULE)
+    public RegistrySerializerModule basicServiceSerializerModule(
+        @Qualifier(AppConfigConstants.BASIC_SERVICE_SERIALIZER) ServiceSerializer serviceSerializer
+    ) {
+        return new RegistrySerializerModule(
+            AppConfigConstants.BASIC_SERVICE_SERIALIZER_MODULE,
+            RegistrySerializerModuleHelper.newVersion("service"),
+            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {serviceSerializer})
+        );
+    }
+
+    @Bean
+    @Qualifier(AppConfigConstants.RELATIONAL_SERVICE_SERIALIZER_MODULE)
+    public RegistrySerializerModule relationalServiceSerializerModule(
+        @Qualifier(AppConfigConstants.RELATIONAL_SERVICE_SERIALIZER) ServiceSerializer serviceSerializer,
+        @Qualifier(AppConfigConstants.BASIC_DATE_SERIALIZER) DateSerializer dateSerializer,
+        @Qualifier(AppConfigConstants.BASIC_ORGANIZATION_SERIALIZER) OrganizationSerializer organizationSerializer
+    ) {
+        return new RegistrySerializerModule(
+            AppConfigConstants.RELATIONAL_SERVICE_SERIALIZER_MODULE,
+            RegistrySerializerModuleHelper.newVersion("service"),
+            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {serviceSerializer, dateSerializer, organizationSerializer})
         );
     }
 

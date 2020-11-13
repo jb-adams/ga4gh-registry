@@ -24,10 +24,21 @@ public class IndexRequestHandler<B extends RegistryModel, D extends RegistryEnti
         setQuerier(querier);
     }
 
+    @Autowired
+    public IndexRequestHandler(Class<B> requestBodyDbQueryClasses, Class<R> responseBodyClass, RegistrySerializerModule serializerModule, HibernateQuerier<D> querier) {
+        super(requestBodyDbQueryClasses, responseBodyClass, serializerModule);
+        setQuerier(querier);
+    }
+
+    public void customizeQueryBuilder(HibernateQueryBuilder qb) {
+
+    }
+
     public List<D> getResultsFromDb() {
         HibernateQuerier<D> q = getQuerier();
         HibernateQueryBuilder qb = getQueryBuilder();
         qb.setResponseClass(q.getTypeClass());
+        customizeQueryBuilder(qb);
         q.setQueryString(qb.build());
         return q.getResults();
     }
