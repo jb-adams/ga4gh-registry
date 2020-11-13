@@ -61,7 +61,6 @@ SET default_with_oids = false;
 
 CREATE TABLE test_schema.implementation (
     id text NOT NULL,
-    standard_version_id text NOT NULL,
     name text NOT NULL,
     description text,
     organization_id text NOT NULL,
@@ -69,15 +68,23 @@ CREATE TABLE test_schema.implementation (
     documentation_url text,
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
-    environment text,
-    version text NOT NULL,
-    url text,
-    category test_schema.implementation_category NOT NULL,
-    curie_prefix text
+    version text NOT NULL
 );
 
 
 ALTER TABLE test_schema.implementation OWNER TO test_user;
+
+--
+-- Name: implementation_standard; Type: TABLE; Schema: test_schema; Owner: test_user
+--
+
+CREATE TABLE test_schema.implementation_standard (
+    implementation_id text NOT NULL,
+    standard_id text NOT NULL
+);
+
+
+ALTER TABLE test_schema.implementation_standard OWNER TO test_user;
 
 --
 -- Name: organization; Type: TABLE; Schema: test_schema; Owner: test_user
@@ -104,6 +111,29 @@ CREATE TABLE test_schema.release_status (
 
 
 ALTER TABLE test_schema.release_status OWNER TO test_user;
+
+--
+-- Name: service; Type: TABLE; Schema: test_schema; Owner: test_user
+--
+
+CREATE TABLE test_schema.service (
+    id text NOT NULL,
+    standard_version_id text NOT NULL,
+    name text NOT NULL,
+    description text,
+    organization_id text NOT NULL,
+    contact_url text,
+    documentation_url text,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    environment text,
+    version text NOT NULL,
+    url text,
+    curie_prefix text
+);
+
+
+ALTER TABLE test_schema.service OWNER TO test_user;
 
 --
 -- Name: standard; Type: TABLE; Schema: test_schema; Owner: test_user
@@ -169,10 +199,25 @@ ALTER TABLE test_schema.work_stream OWNER TO test_user;
 -- Data for Name: implementation; Type: TABLE DATA; Schema: test_schema; Owner: test_user
 --
 
-COPY test_schema.implementation (id, standard_version_id, name, description, organization_id, contact_url, documentation_url, created_at, updated_at, environment, version, url, category, curie_prefix) FROM stdin;
-org.ga4gh.htsgetreference	9da4ec68-19ca-4603-9d0c-ad62c8e56796	GA4GH htsget	ga4gh implementation of htsget	org.ga4gh	mailto:nobody@ga4gh.org	https://example.org/doc/ga4gh/htsget	\N	\N	production	1.0.0	https://example.org/api/ga4gh/htsget	deployment	\N
-org.ga4gh.registry	20dc24de-86a5-4301-a9be-95211469dabd	GA4GH service registry	ga4gh implementation of service registry	org.ga4gh	mailto:nobody@ga4gh.org	https://example.org/doc/ga4gh/registry	2020-03-01 12:30:00-05	2020-07-22 09:26:00-04	\N	1.0.0	https://example.org/api/ga4gh/registry	deployment	\N
-org.broadinstitute.gatk.htsget	9da4ec68-19ca-4603-9d0c-ad62c8e56796	htsget client in GATK	htsget client in GATK	org.broadinstitute	mailto:nobody@ga4gh.org	https://gatk.broadinstitute.org	\N	\N	\N	1.0.0	\N	implementation	\N
+COPY test_schema.implementation (id, name, description, organization_id, contact_url, documentation_url, created_at, updated_at, version) FROM stdin;
+uk.ac.ebi.refget	refget client implementation	a client for the refget protocol	uk.ac.ebi	mailto:nobody@ga4gh.org	https://refget.ebi.org	2020-11-13 15:03:05-05	2020-11-13 15:03:05-05	1.0.0
+org.broadinstitute.gatk	GATK	GA4GH clients in the Genome Analysis Toolkit (GATK)	org.broadinstitute	mailto:nobody@ga4gh.org	https://gatk.broadinstitute.org	2020-11-13 13:24:49-05	2020-11-13 13:24:49-05	1.0.0
+org.ga4gh.utils	GA4GH Utils	Utilities for multiple GA4GH standards	org.ga4gh	mailto:nobody@ga4gh.org	https://ga4gh.org/utils	2020-11-13 13:24:49-05	2020-11-13 13:24:49-05	1.0.0
+\.
+
+
+--
+-- Data for Name: implementation_standard; Type: TABLE DATA; Schema: test_schema; Owner: test_user
+--
+
+COPY test_schema.implementation_standard (implementation_id, standard_id) FROM stdin;
+uk.ac.ebi.refget	refget
+org.broadinstitute.gatk	htsget
+org.broadinstitute.gatk	service-registry
+org.ga4gh.utils	htsget
+org.ga4gh.utils	service-registry
+org.ga4gh.utils	cram
+org.ga4gh.utils	refget
 \.
 
 
@@ -195,6 +240,17 @@ COPY test_schema.release_status (id, status) FROM stdin;
 0	Proposed
 1	Approved
 2	Legacy
+\.
+
+
+--
+-- Data for Name: service; Type: TABLE DATA; Schema: test_schema; Owner: test_user
+--
+
+COPY test_schema.service (id, standard_version_id, name, description, organization_id, contact_url, documentation_url, created_at, updated_at, environment, version, url, curie_prefix) FROM stdin;
+org.ga4gh.htsgetreference	9da4ec68-19ca-4603-9d0c-ad62c8e56796	GA4GH htsget	ga4gh implementation of htsget	org.ga4gh	mailto:nobody@ga4gh.org	https://example.org/doc/ga4gh/htsget	\N	\N	production	1.0.0	https://example.org/api/ga4gh/htsget	\N
+org.ga4gh.registry	20dc24de-86a5-4301-a9be-95211469dabd	GA4GH service registry	ga4gh implementation of service registry	org.ga4gh	mailto:nobody@ga4gh.org	https://example.org/doc/ga4gh/registry	2020-03-01 12:30:00-05	2020-07-22 09:26:00-04	\N	1.0.0	https://example.org/api/ga4gh/registry	\N
+uk.ac.ebi.refget-insdc	6b50a044-7056-44a7-aae2-327a210087ff	Refget INSDC	Service INSDC sequences according to refget protocol	uk.ac.ebi	mailto:nobody@ga4gh.org	https://refget-insdc.ebi.ac.uk/docs	2020-11-13 13:24:49-05	2020-11-13 13:24:49-05	prod	1.0.0	https://refget-insdc.ebi.ac.uk/api	\N
 \.
 
 
@@ -270,19 +326,19 @@ org.ga4gh.workstream.rews	Regulatory & Ethics	REWS
 
 
 --
--- Name: implementation implementation_curie_prefix_key; Type: CONSTRAINT; Schema: test_schema; Owner: test_user
---
-
-ALTER TABLE ONLY test_schema.implementation
-    ADD CONSTRAINT implementation_curie_prefix_key UNIQUE (curie_prefix);
-
-
---
 -- Name: implementation implementation_pkey; Type: CONSTRAINT; Schema: test_schema; Owner: test_user
 --
 
 ALTER TABLE ONLY test_schema.implementation
     ADD CONSTRAINT implementation_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: implementation_standard implementation_standard_pkey; Type: CONSTRAINT; Schema: test_schema; Owner: test_user
+--
+
+ALTER TABLE ONLY test_schema.implementation_standard
+    ADD CONSTRAINT implementation_standard_pkey PRIMARY KEY (implementation_id, standard_id);
 
 
 --
@@ -307,6 +363,22 @@ ALTER TABLE ONLY test_schema.organization
 
 ALTER TABLE ONLY test_schema.organization
     ADD CONSTRAINT organization_short_name_key UNIQUE (short_name);
+
+
+--
+-- Name: service service_curie_prefix_key; Type: CONSTRAINT; Schema: test_schema; Owner: test_user
+--
+
+ALTER TABLE ONLY test_schema.service
+    ADD CONSTRAINT service_curie_prefix_key UNIQUE (curie_prefix);
+
+
+--
+-- Name: service service_pkey; Type: CONSTRAINT; Schema: test_schema; Owner: test_user
+--
+
+ALTER TABLE ONLY test_schema.service
+    ADD CONSTRAINT service_pkey PRIMARY KEY (id);
 
 
 --
@@ -394,15 +466,39 @@ ALTER TABLE ONLY test_schema.work_stream
 --
 
 ALTER TABLE ONLY test_schema.implementation
-    ADD CONSTRAINT implementation_organization_id_fkey FOREIGN KEY (organization_id) REFERENCES test_schema.organization(id) ON UPDATE CASCADE;
+    ADD CONSTRAINT implementation_organization_id_fkey FOREIGN KEY (organization_id) REFERENCES test_schema.organization(id);
 
 
 --
--- Name: implementation implementation_standard_version_id_fkey; Type: FK CONSTRAINT; Schema: test_schema; Owner: test_user
+-- Name: implementation_standard implementation_standard_implementation_id_fkey; Type: FK CONSTRAINT; Schema: test_schema; Owner: test_user
 --
 
-ALTER TABLE ONLY test_schema.implementation
-    ADD CONSTRAINT implementation_standard_version_id_fkey FOREIGN KEY (standard_version_id) REFERENCES test_schema.standard_version(id);
+ALTER TABLE ONLY test_schema.implementation_standard
+    ADD CONSTRAINT implementation_standard_implementation_id_fkey FOREIGN KEY (implementation_id) REFERENCES test_schema.implementation(id) ON UPDATE CASCADE;
+
+
+--
+-- Name: implementation_standard implementation_standard_standard_id_fkey; Type: FK CONSTRAINT; Schema: test_schema; Owner: test_user
+--
+
+ALTER TABLE ONLY test_schema.implementation_standard
+    ADD CONSTRAINT implementation_standard_standard_id_fkey FOREIGN KEY (standard_id) REFERENCES test_schema.standard(id);
+
+
+--
+-- Name: service service_organization_id_fkey; Type: FK CONSTRAINT; Schema: test_schema; Owner: test_user
+--
+
+ALTER TABLE ONLY test_schema.service
+    ADD CONSTRAINT service_organization_id_fkey FOREIGN KEY (organization_id) REFERENCES test_schema.organization(id) ON UPDATE CASCADE;
+
+
+--
+-- Name: service service_standard_version_id_fkey; Type: FK CONSTRAINT; Schema: test_schema; Owner: test_user
+--
+
+ALTER TABLE ONLY test_schema.service
+    ADD CONSTRAINT service_standard_version_id_fkey FOREIGN KEY (standard_version_id) REFERENCES test_schema.standard_version(id);
 
 
 --

@@ -52,7 +52,7 @@ public class StandardsTest extends AbstractTestNGSpringContextTests {
         return new Object[][] {
             { "refget", status().isOk(), true, showDir + "00.json" },
             { "sam", status().isOk(), true, showDir + "01.json" },
-            { "rnaget", status().isOk(), true, showDir + "02.json" },
+            { "htsget", status().isOk(), true, showDir + "02.json" },
             { "nonexistent", status().isNotFound(), false, null }
         };
     }

@@ -15,16 +15,16 @@ public class StandardVersionTest {
         private String versionNumber;
         private String documentationUrl;
         private ReleaseStatus releaseStatus;
-        private List<Implementation> implementations;
+        private List<Service> services;
         private String expString;
 
-        public TestCase(String id, Standard standard, String versionNumber, String documentationUrl, ReleaseStatus releaseStatus, List<Implementation> implementations, String expString) {
+        public TestCase(String id, Standard standard, String versionNumber, String documentationUrl, ReleaseStatus releaseStatus, List<Service> services, String expString) {
             this.id = id;
             this.standard = standard;
             this.versionNumber = versionNumber;
             this.documentationUrl = documentationUrl;
             this.releaseStatus = releaseStatus;
-            this.implementations = implementations;
+            this.services = services;
             this.expString = expString;
         }
 
@@ -48,8 +48,8 @@ public class StandardVersionTest {
             return releaseStatus;
         }
 
-        public List<Implementation> getImplementations() {
-            return implementations;
+        public List<Service> getServices() {
+            return services;
         }
 
         public String getExpString() {
@@ -66,8 +66,8 @@ public class StandardVersionTest {
                 "1.2.0",
                 "https://htsget.org/v/1.2.0",
                 new ReleaseStatus("Approved"),
-                new ArrayList<Implementation>() {{
-                    add(new Implementation(
+                new ArrayList<Service>() {{
+                    add(new Service(
                         "htsget reference implementation", null, null, null, null, null, null, null, null
                     ));
                 }},
@@ -79,8 +79,8 @@ public class StandardVersionTest {
                 "1.0.0",
                 "https://wes.org/v/1.0.0",
                 new ReleaseStatus("Approved"),
-                new ArrayList<Implementation>() {{
-                    add(new Implementation(
+                new ArrayList<Service>() {{
+                    add(new Service(
                         "wes reference implementation", null, null, null, null, null, null, null, null
                     ));
                 }},
@@ -92,8 +92,8 @@ public class StandardVersionTest {
                 "2.0.0",
                 "https://refget.org/v/2.0.0",
                 new ReleaseStatus("Approved"),
-                new ArrayList<Implementation>() {{
-                    add(new Implementation(
+                new ArrayList<Service>() {{
+                    add(new Service(
                         "refget reference implementation", null, null, null, null, null, null, null, null
                     ));
                 }},
@@ -111,13 +111,13 @@ public class StandardVersionTest {
         standardVersion.setVersionNumber(testCase.getVersionNumber());
         standardVersion.setDocumentationUrl(testCase.getDocumentationUrl());
         standardVersion.setReleaseStatus(testCase.getReleaseStatus());
-        standardVersion.setImplementations(testCase.getImplementations());
+        standardVersion.setServices(testCase.getServices());
         Assert.assertEquals(standardVersion.getId().toString(), testCase.getId().toString());
         Assert.assertEquals(standardVersion.getStandard().getName(), testCase.getStandard().getName());
         Assert.assertEquals(standardVersion.getVersionNumber(), testCase.getVersionNumber());
         Assert.assertEquals(standardVersion.getDocumentationUrl(), testCase.getDocumentationUrl());
         Assert.assertEquals(standardVersion.getReleaseStatus().getStatus(), testCase.getReleaseStatus().getStatus());
-        Assert.assertEquals(standardVersion.getImplementations().get(0).getName(), testCase.getImplementations().get(0).getName());
+        Assert.assertEquals(standardVersion.getServices().get(0).getName(), testCase.getServices().get(0).getName());
         Assert.assertEquals(standardVersion.toString(), testCase.getExpString());
     }
 
@@ -128,13 +128,13 @@ public class StandardVersionTest {
         standardVersion.setId(testCase.getId());
         standardVersion.setStandard(testCase.getStandard());
         standardVersion.setReleaseStatus(testCase.getReleaseStatus());
-        standardVersion.setImplementations(testCase.getImplementations());
+        standardVersion.setServices(testCase.getServices());
         Assert.assertEquals(standardVersion.getId().toString(), testCase.getId().toString());
         Assert.assertEquals(standardVersion.getStandard().getName(), testCase.getStandard().getName());
         Assert.assertEquals(standardVersion.getVersionNumber(), testCase.getVersionNumber());
         Assert.assertEquals(standardVersion.getDocumentationUrl(), testCase.getDocumentationUrl());
         Assert.assertEquals(standardVersion.getReleaseStatus().getStatus(), testCase.getReleaseStatus().getStatus());
-        Assert.assertEquals(standardVersion.getImplementations().get(0).getName(), testCase.getImplementations().get(0).getName());
+        Assert.assertEquals(standardVersion.getServices().get(0).getName(), testCase.getServices().get(0).getName());
         Assert.assertEquals(standardVersion.toString(), testCase.getExpString());
     }
 }

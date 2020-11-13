@@ -15,14 +15,16 @@ public class OrganizationTest {
         private String shortName;
         private String url;
         private List<Implementation> implementations;
+        private List<Service> services;
         private String expString;
 
-        public TestCase(String id, String name, String shortName, String url, List<Implementation> implementations, String expString) {
+        public TestCase(String id, String name, String shortName, String url, List<Implementation> implementations, List<Service> services, String expString) {
             this.id = id;
             this.name = name;
             this.shortName = shortName;
             this.url = url;
             this.implementations = implementations;
+            this.services = services;
             this.expString = expString;
         }
 
@@ -46,6 +48,10 @@ public class OrganizationTest {
             return implementations;
         }
 
+        public List<Service> getServices() {
+            return services;
+        }
+
         public String getExpString() {
             return expString;
         }
@@ -60,7 +66,10 @@ public class OrganizationTest {
                 "GA4GH",
                 "https://ga4gh.org",
                 new ArrayList<Implementation>() {{
-                    add(new Implementation(
+                    add(new Implementation());
+                }},
+                new ArrayList<Service>() {{
+                    add(new Service(
                         "htsget reference implementation", null, null, null, null, null, null, null, null
                     ));
                 }},
@@ -72,7 +81,10 @@ public class OrganizationTest {
                 "GDG",
                 "https://gdg.org",
                 new ArrayList<Implementation>() {{
-                    add(new Implementation(
+                    add(new Implementation());
+                }},
+                new ArrayList<Service>() {{
+                    add(new Service(
                         "refget service", null, null, null, null, null, null, null, null
                     ));
                 }},
@@ -90,6 +102,7 @@ public class OrganizationTest {
         org.setShortName(testCase.getShortName());
         org.setUrl(testCase.getUrl());
         org.setImplementations(testCase.getImplementations());
+        org.setServices(testCase.getServices());
         Assert.assertEquals(org.getId().toString(), testCase.getId().toString());
         Assert.assertEquals(org.getName(), testCase.getName());
         Assert.assertEquals(org.getShortName(), testCase.getShortName());
@@ -104,6 +117,7 @@ public class OrganizationTest {
         Organization org = new Organization(testCase.getName(), testCase.getShortName(), testCase.getUrl());
         org.setId(testCase.getId());
         org.setImplementations(testCase.getImplementations());
+        org.setServices(testCase.getServices());
         Assert.assertEquals(org.getId().toString(), testCase.getId().toString());
         Assert.assertEquals(org.getName(), testCase.getName());
         Assert.assertEquals(org.getShortName(), testCase.getShortName());
