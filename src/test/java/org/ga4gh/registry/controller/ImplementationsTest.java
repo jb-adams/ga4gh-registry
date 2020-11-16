@@ -58,7 +58,7 @@ public class ImplementationsTest extends AbstractTestNGSpringContextTests {
     @DataProvider(name = "showImplementationCases")
     public Object[][] showImplementationCases() {
         return new Object[][] {
-            { "org.broadinstitute.gatk.htsget", status().isOk(), true, showDir + "00.json" }
+            { "org.broadinstitute.gatk", status().isOk(), true, showDir + "00.json" }
         };
     }
 
@@ -72,14 +72,14 @@ public class ImplementationsTest extends AbstractTestNGSpringContextTests {
     @DataProvider(name = "putImplementationCases")
     public Object[][] putImplementationCases() {
         return new Object[][] {
-            { "uk.ac.ebi.refget", putDir + "00.json", HttpHeaderSets.ok(), status().isOk(), true }
+            { "uk.ac.ebi.htsget", putDir + "00.json", HttpHeaderSets.ok(), status().isOk(), true }
         };
     }
 
     @DataProvider(name = "deleteImplementationCases")
     public Object[][] deleteImplementationCases() {
         return new Object[][] {
-            {"uk.ac.ebi.refget", HttpHeaderSets.ok(), status().isOk() }
+            {"uk.ac.ebi.htsget", HttpHeaderSets.ok(), status().isOk() }
         };
     }
 
