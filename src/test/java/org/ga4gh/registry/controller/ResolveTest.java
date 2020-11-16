@@ -49,9 +49,6 @@ public class ResolveTest extends AbstractTestNGSpringContextTests {
     @Test(dataProvider = "resolveURICases")
     public void testResolveURI(String curie, ResultMatcher expStatus, boolean expSuccess, String expResultResourcePath) throws Exception {
         MvcResult result = mockMvc.perform(get("/resolve-uri/" + curie)).andExpect(expStatus).andReturn();
-        System.out.println("RESPONSE BODY\n*****");
-        System.out.println(result.getResponse().getContentAsString());
-        System.out.println("*****");
         if (expSuccess) {
             String responseBody = result.getResponse().getContentAsString();
             String expResponseBody = ResourceLoader.load(expResultResourcePath);

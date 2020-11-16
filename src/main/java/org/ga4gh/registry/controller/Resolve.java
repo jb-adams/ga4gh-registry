@@ -27,9 +27,6 @@ public class Resolve {
 
     @GetMapping(path = "/{uri:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> resolveURI(@PathVariable Map<String, String> pathParams) {
-        System.out.println("HIT THE PATH");
-        System.out.println(pathParams);
-        System.out.println("***");
         return resolveURIHandlerFactory.handleRequest(pathParams);
     }
 }
