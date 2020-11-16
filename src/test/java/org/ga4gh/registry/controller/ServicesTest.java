@@ -55,7 +55,7 @@ public class ServicesTest extends AbstractTestNGSpringContextTests {
             { false, null, status().isOk(), true, indexDir + "00.json" },
             { true, "org.ga4gh:service-registry:1.0.0", status().isOk(), true, indexDir + "01.json" },
             { true, "org.ga4gh:htsget:1.2.0", status().isOk(), true, indexDir + "02.json" },
-            { true, "org.ga4gh:drs:1.0.0", status().isOk(), true, indexDir + "03.json" },
+            { true, "org.ga4gh:trs:2.0.0", status().isOk(), true, indexDir + "03.json" },
             { true, "BadTypeString", status().isBadRequest(), false, null },
             { true, "BadOrg:htsget:1.2.0", status().isBadRequest(), false, null }
         };

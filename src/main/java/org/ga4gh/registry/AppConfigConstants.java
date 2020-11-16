@@ -118,6 +118,8 @@ public class AppConfigConstants {
     public static final String BASIC_SERVICE_TYPE_SERIALIZER = "basicServiceTypeSerializer";
     // DATE
     public static final String BASIC_DATE_SERIALIZER = "basicDateSerializer";
+    // URI RESOLUTION
+    public static final String RELATIONAL_URI_RESOLUTION_SERIALIZER = "basicUriResolutionSerializer";
 
     /* ******************************
      * SERIALIZER MODULES
@@ -145,6 +147,8 @@ public class AppConfigConstants {
     public static final String BASIC_REGISTRY_ERROR_SERIALIZER_MODULE = "basicRegistryErrorSerializerModule";
     // SERVICE TYPE
     public static final String BASIC_SERVICE_TYPE_SERIALIZER_MODULE = "basicServiceTypeSerializerModule";
+    // URI RESOLUTION
+    public static final String RELATIONAL_URI_RESOLUTION_SERIALIZER_MODULE = "relationalUriResolutionSerializerModule";
 
     /* ******************************
      * MISCELLANEOUS

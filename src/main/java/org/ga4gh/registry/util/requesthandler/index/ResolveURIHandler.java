@@ -5,54 +5,47 @@ import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.ga4gh.registry.exception.BadRequestException;
 import org.ga4gh.registry.exception.ResourceNotFoundException;
 import org.ga4gh.registry.model.Curie;
-import org.ga4gh.registry.model.Implementation;
 import org.ga4gh.registry.model.Service;
+import org.ga4gh.registry.model.URIResolution;
 import org.ga4gh.registry.util.hibernate.HibernateQuerier;
 import org.ga4gh.registry.util.hibernate.HibernateQueryBuilder;
 import org.ga4gh.registry.util.serialize.RegistrySerializerModule;
 import org.ga4gh.registry.util.uriresolver.URIResolver;
 import org.springframework.http.ResponseEntity;
 
-public class ResolveURIHandler extends IndexRequestHandler<Service, Service, Service> {
+public class ResolveURIHandler extends IndexRequestHandler<Service, Service, URIResolution> {
 
-    public ResolveURIHandler(Class<Service> allClasses, RegistrySerializerModule serializerModule, HibernateQuerier<Service> querier) {
-        super(allClasses, serializerModule, querier);
+    private Curie curie;
+
+    public ResolveURIHandler(Class<Service> requestBodyDbEntityClass, Class<URIResolution> responseBodyClass, RegistrySerializerModule serializerModule, HibernateQuerier<Service> querier) {
+        super(requestBodyDbEntityClass, responseBodyClass, serializerModule, querier);
+    }
+
+    public void customizeQueryBuilder(HibernateQueryBuilder qb) {
+        try {
+            Curie curie = Curie.fromString(getPathParams().get("uri"));
+            setCurie(curie);
+        }  catch (ParseException ex) {
+            throw new BadRequestException(ex.getMessage());
+        }
+        qb.filter("curiePrefix", getCurie().getPrefix());
     }
 
     public ResponseEntity<String> createResponseEntity() {
-
-        try {
-            String uriString = getPathParams().get("uri");
-            Curie curie = Curie.fromString(uriString);
-            Service service = getServiceMatchingCuriePrefix(curie.getPrefix());
-            if (service == null) {
-                throw new ResourceNotFoundException("There is no registered service with the CURIE prefix: '" + curie.getPrefix() + "'");
-            }
-
-            String body = resolveURLForService(service, curie.getId());
-
-
-            return ResponseEntity.ok().body(body);
-        } catch (ParseException ex) {
-            throw new BadRequestException(ex.getMessage());
+        Service service = getSingleResultFromDb();
+        if (service == null) {
+            throw new ResourceNotFoundException("There is no registered service with the CURIE prefix: '" + curie.getPrefix() + "'");
         }
+        URIResolution response = resolveURLForService(service, getCurie().getId());
+        ResponseEntity<String> responseEntity = ResponseEntity.ok().body(serializeObject(response));
+        return responseEntity;
     }
 
-    private Service getServiceMatchingCuriePrefix(String curiePrefix) {
-        HibernateQuerier<Service> q = getQuerier();
-        HibernateQueryBuilder qb = getQueryBuilder();
-        qb.setResponseClass(q.getTypeClass());
-        qb.filter("curiePrefix", curiePrefix);
-        q.setQueryString(qb.build());
-        return q.getSingleResult();
-    }
-
-    private String resolveURLForService(Service service, String id) {
-        String resolvedURL = null;
+    private URIResolution resolveURLForService(Service service, String id) {
+        URIResolution resolution = new URIResolution();
 
         Map<String, String> resolutionMethodByServiceType = new HashMap<>();
         resolutionMethodByServiceType.put("org.ga4gh:drs:1.0.0", "drsv1");
@@ -61,17 +54,31 @@ public class ResolveURIHandler extends IndexRequestHandler<Service, Service, Ser
         try {
             String methodName = resolutionMethodByServiceType.get(service.getServiceType().signature());
             URIResolver resolver = new URIResolver();
-            Method method = resolver.getClass().getMethod(methodName, Implementation.class, id.getClass());
-            resolvedURL = (String) method.invoke(resolver, service, id);
+            Method method = resolver.getClass().getMethod(methodName, Service.class, id.getClass());
+            String resolvedURL = (String) method.invoke(resolver, service, id);
+            resolution.setServiceId(service.getId());
+            resolution.setServiceName(service.getName());
+            resolution.setServiceType(service.getServiceType());
+            resolution.setResolvedURL(resolvedURL);
             
         } catch (NoSuchMethodException ex) {
-            throw new BadRequestException("There is no URI resolution method for this service / service type");
+            throw new BadRequestException("There is no URI resolution method for this service type");
         } catch (IllegalAccessException ex) {
             throw new BadRequestException("Could not resolve URI");
         } catch (InvocationTargetException ex) {
             throw new BadRequestException("Could not resolve URI");
         }
         
-        return resolvedURL;
+        return resolution;
+    }
+
+    /* setters and getters */
+
+    public void setCurie(Curie curie) {
+        this.curie = curie;
+    }
+
+    public Curie getCurie() {
+        return curie;
     }
 }

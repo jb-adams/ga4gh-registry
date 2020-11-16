@@ -6,8 +6,6 @@ import org.ga4gh.registry.util.StaticUtils;
 public class URIResolver {
 
     public String drsv1(Service service, String id) {
-        String resolvedURL = StaticUtils.addTrailingSlash(service.getUrl()) + "ga4gh/drs/v1/objects/" + id;
-        return "{\"resolvedURL\":\"" + resolvedURL + "\"}";
+        return StaticUtils.addTrailingSlash(service.getUrl()) + "ga4gh/drs/v1/objects/" + id;
     }
-    
 }

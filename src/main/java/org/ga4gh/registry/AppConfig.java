@@ -43,6 +43,7 @@ import org.ga4gh.registry.util.serialize.serializers.ServiceTypeSerializer;
 import org.ga4gh.registry.util.serialize.serializers.StandardCategorySerializer;
 import org.ga4gh.registry.util.serialize.serializers.StandardSerializer;
 import org.ga4gh.registry.util.serialize.serializers.StandardVersionSerializer;
+import org.ga4gh.registry.util.serialize.serializers.URIResolutionSerializer;
 import org.ga4gh.registry.util.serialize.serializers.WorkStreamSerializer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -315,10 +316,10 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean(name = AppConfigConstants.RESOLVE_URI_HANDLER)
     @Scope(AppConfigConstants.PROTOTYPE)
     public ResolveURIHandler resolveURIHandler(
-        // SERIALIZER MODULE GOES HERE
-        @Qualifier(AppConfigConstants.IMPLEMENTATION_HIBERNATE_QUERIER) HibernateQuerier<Service> querier
+        @Qualifier(AppConfigConstants.RELATIONAL_URI_RESOLUTION_SERIALIZER_MODULE) RegistrySerializerModule serializerModule,
+        @Qualifier(AppConfigConstants.SERVICE_HIBERNATE_QUERIER) HibernateQuerier<Service> querier
     ) {
-        return new ResolveURIHandler(Service.class, null, querier);
+        return new ResolveURIHandler(Service.class, URIResolution.class, serializerModule, querier);
     }
 
     /* ******************************
@@ -471,8 +472,8 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean
     @Qualifier(AppConfigConstants.RESOLVE_URI_HANDLER_FACTORY)
-    public RequestHandlerFactory<Implementation, Implementation, URIResolution> resolveURIHandlerFactory() {
-        return new RequestHandlerFactory<>(Implementation.class, URIResolution.class, AppConfigConstants.RESOLVE_URI_HANDLER);
+    public RequestHandlerFactory<Service, Service, URIResolution> resolveURIHandlerFactory() {
+        return new RequestHandlerFactory<>(Service.class, URIResolution.class, AppConfigConstants.RESOLVE_URI_HANDLER);
     }
 
     /* ******************************
@@ -600,6 +601,15 @@ public class AppConfig implements WebMvcConfigurer {
     @Qualifier(AppConfigConstants.BASIC_DATE_SERIALIZER)
     public DateSerializer basicDateSerializer() {
         return new DateSerializer();
+    }
+
+    /* URI RESOLUTION SERIALIZER BEANS */
+
+    @Bean
+    @Qualifier(AppConfigConstants.RELATIONAL_URI_RESOLUTION_SERIALIZER)
+    public URIResolutionSerializer relationalUriResolutionSerializer() {
+        String []relationalAttributes = {"serviceType"};
+        return new URIResolutionSerializer(relationalAttributes);
     }
 
     /* ******************************
@@ -780,6 +790,21 @@ public class AppConfig implements WebMvcConfigurer {
             AppConfigConstants.BASIC_SERVICE_TYPE_SERIALIZER_MODULE,
             RegistrySerializerModuleHelper.newVersion("serviceType"),
             RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {serviceTypeSerializer})
+        );
+    }
+
+    /* URI RESOLUTION SERIALIZER MODULE BEANS */
+
+    @Bean
+    @Qualifier(AppConfigConstants.RELATIONAL_URI_RESOLUTION_SERIALIZER_MODULE)
+    public RegistrySerializerModule relationalUriResolutionSerializerModule(
+        @Qualifier(AppConfigConstants.RELATIONAL_URI_RESOLUTION_SERIALIZER) URIResolutionSerializer uriResolutionSerializer,
+        @Qualifier(AppConfigConstants.BASIC_SERVICE_TYPE_SERIALIZER) ServiceTypeSerializer serviceTypeSerializer
+    ) {
+        return new RegistrySerializerModule(
+            AppConfigConstants.RELATIONAL_URI_RESOLUTION_SERIALIZER_MODULE,
+            RegistrySerializerModuleHelper.newVersion("uriResolution"),
+            RegistrySerializerModuleHelper.newSerializers(new JsonSerializer<?>[] {uriResolutionSerializer, serviceTypeSerializer})
         );
     }
 

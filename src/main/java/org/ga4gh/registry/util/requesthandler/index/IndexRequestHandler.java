@@ -34,13 +34,22 @@ public class IndexRequestHandler<B extends RegistryModel, D extends RegistryEnti
 
     }
 
-    public List<D> getResultsFromDb() {
+    public void setupQuery() {
         HibernateQuerier<D> q = getQuerier();
         HibernateQueryBuilder qb = getQueryBuilder();
         qb.setResponseClass(q.getTypeClass());
         customizeQueryBuilder(qb);
         q.setQueryString(qb.build());
-        return q.getResults();
+    }
+
+    public List<D> getResultsFromDb() {
+        setupQuery();
+        return getQuerier().getResults();
+    }
+
+    public D getSingleResultFromDb() {
+        setupQuery();
+        return getQuerier().getSingleResult();
     }
 
     public ResponseEntity<String> createResponseEntity() {
