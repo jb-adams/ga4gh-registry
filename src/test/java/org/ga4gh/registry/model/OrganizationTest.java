@@ -70,7 +70,7 @@ public class OrganizationTest {
                 }},
                 new ArrayList<Service>() {{
                     add(new Service(
-                        "htsget reference implementation", null, null, null, null, null, null, null, null
+                        "htsget reference implementation", null, null, null, null, null, null, null, null, null
                     ));
                 }},
                 "Organization [id=d21b145b-0acb-4c5f-83d6-6c2e34884b94, name=Global Alliance for Genomics and Health, shortName=GA4GH, url=https://ga4gh.org]"
@@ -85,12 +85,22 @@ public class OrganizationTest {
                 }},
                 new ArrayList<Service>() {{
                     add(new Service(
-                        "refget service", null, null, null, null, null, null, null, null
+                        "refget service", null, null, null, null, null, null, null, null, null
                     ));
                 }},
                 "Organization [id=7f219899-c2ef-4095-9c77-86e69a99f6c6, name=Genomic Developers Group, shortName=GDG, url=https://gdg.org]"
             )}
         };
+    }
+
+    public void assertions(Organization org, TestCase testCase) {
+        Assert.assertEquals(org.getId().toString(), testCase.getId().toString());
+        Assert.assertEquals(org.getName(), testCase.getName());
+        Assert.assertEquals(org.getShortName(), testCase.getShortName());
+        Assert.assertEquals(org.getUrl(), testCase.getUrl());
+        Assert.assertEquals(org.getImplementations().get(0).getName(), testCase.getImplementations().get(0).getName());
+        Assert.assertEquals(org.toString(), testCase.getExpString());
+        Assert.assertEquals(org.getTableName(), "organization");
     }
 
     @Test(dataProvider = "cases")
@@ -103,12 +113,7 @@ public class OrganizationTest {
         org.setUrl(testCase.getUrl());
         org.setImplementations(testCase.getImplementations());
         org.setServices(testCase.getServices());
-        Assert.assertEquals(org.getId().toString(), testCase.getId().toString());
-        Assert.assertEquals(org.getName(), testCase.getName());
-        Assert.assertEquals(org.getShortName(), testCase.getShortName());
-        Assert.assertEquals(org.getUrl(), testCase.getUrl());
-        Assert.assertEquals(org.getImplementations().get(0).getName(), testCase.getImplementations().get(0).getName());
-        Assert.assertEquals(org.toString(), testCase.getExpString());
+        assertions(org, testCase);
     }
 
     @Test(dataProvider = "cases")
@@ -118,11 +123,6 @@ public class OrganizationTest {
         org.setId(testCase.getId());
         org.setImplementations(testCase.getImplementations());
         org.setServices(testCase.getServices());
-        Assert.assertEquals(org.getId().toString(), testCase.getId().toString());
-        Assert.assertEquals(org.getName(), testCase.getName());
-        Assert.assertEquals(org.getShortName(), testCase.getShortName());
-        Assert.assertEquals(org.getUrl(), testCase.getUrl());
-        Assert.assertEquals(org.getImplementations().get(0).getName(), testCase.getImplementations().get(0).getName());
-        Assert.assertEquals(org.toString(), testCase.getExpString());
+        assertions(org, testCase);
     }
 }

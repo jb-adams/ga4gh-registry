@@ -94,31 +94,32 @@ public class WorkStreamTest {
         };
     }
 
+    public void assertions(WorkStream workStream, TestCase testCase) {
+        Assert.assertEquals(workStream.getId().toString(), testCase.getId().toString());
+        Assert.assertEquals(workStream.getName(), testCase.getName());
+        Assert.assertEquals(workStream.getAbbreviation(), testCase.getAbbreviation());
+        Assert.assertEquals(workStream.getStandards().get(0).getName(), testCase.getStandards().get(0).getName());
+        Assert.assertEquals(workStream.toString(), testCase.getExpString());
+        Assert.assertEquals(workStream.getTableName(), "work_stream");
+    }
+
     @Test(dataProvider = "cases")
     public void testWorkStreamNoArgsConstructor(TestCase testCase) throws Exception {
-
         WorkStream workStream = new WorkStream();
         workStream.setId(testCase.getId());
         workStream.setName(testCase.getName());
         workStream.setAbbreviation(testCase.getAbbreviation());
         workStream.setStandards(testCase.getStandards());
-        Assert.assertEquals(workStream.getId().toString(), testCase.getId().toString());
-        Assert.assertEquals(workStream.getName(), testCase.getName());
-        Assert.assertEquals(workStream.getAbbreviation(), testCase.getAbbreviation());
-        Assert.assertEquals(workStream.getStandards().get(0).getName(), testCase.getStandards().get(0).getName());
-        Assert.assertEquals(workStream.toString(), testCase.getExpString());
+        workStream.lazyLoad();
+        assertions(workStream, testCase);
     }
 
     @Test(dataProvider = "cases")
     public void testWorkStreamAllArgsConstructor(TestCase testCase) throws Exception {
-
         WorkStream workStream = new WorkStream(testCase.getName(), testCase.getAbbreviation());
         workStream.setId(testCase.getId());
         workStream.setStandards(testCase.getStandards());
-        Assert.assertEquals(workStream.getId().toString(), testCase.getId().toString());
-        Assert.assertEquals(workStream.getName(), testCase.getName());
-        Assert.assertEquals(workStream.getAbbreviation(), testCase.getAbbreviation());
-        Assert.assertEquals(workStream.getStandards().get(0).getName(), testCase.getStandards().get(0).getName());
-        Assert.assertEquals(workStream.toString(), testCase.getExpString());
+        workStream.lazyLoad();
+        assertions(workStream, testCase);
     }
 }

@@ -20,10 +20,11 @@ public class StandardTest {
         private ReleaseStatus releaseStatus;
         private String artifact;
         private List<StandardVersion> standardVersions;
+        private List<Implementation> implementations;
         private WorkStream workStream;
         private String expString;
 
-        public TestCase(String id, String name, String abbreviation, StandardCategory standardCategory, String summary, String description, String documentationUrl, ReleaseStatus releaseStatus, String artifact, List<StandardVersion> standardVersions, WorkStream workStream, String expString) {
+        public TestCase(String id, String name, String abbreviation, StandardCategory standardCategory, String summary, String description, String documentationUrl, ReleaseStatus releaseStatus, String artifact, List<StandardVersion> standardVersions, List<Implementation> implementations, WorkStream workStream, String expString) {
             this.id = id;
             this.name = name;
             this.abbreviation = abbreviation;
@@ -34,6 +35,7 @@ public class StandardTest {
             this.releaseStatus = releaseStatus;
             this.artifact = artifact;
             this.standardVersions = standardVersions;
+            this.implementations = implementations;
             this.workStream = workStream;
             this.expString = expString;
         }
@@ -78,6 +80,10 @@ public class StandardTest {
             return standardVersions;
         }
 
+        public List<Implementation> getImplementations() {
+            return implementations;
+        }
+
         public WorkStream getWorkStream() {
             return workStream;
         }
@@ -102,7 +108,10 @@ public class StandardTest {
                 "refget",
                 new ArrayList<StandardVersion>() {{
                     add(new StandardVersion("1.0.0", "https://refget.org/v/1.0.0"));
-                }}, 
+                }},
+                new ArrayList<Implementation>() {{
+                    add(new Implementation());
+                }},
                 new WorkStream("Large Scale Genomics", "LSG"),
                 "Standard [id=86d2f6bd-9969-49d7-bcb7-f51b3887d912, name=refget, summary=a summary of refget, description=a long description of refget, documentationUrl=https://refget.org, artifact=refget]"
             )},
@@ -118,7 +127,10 @@ public class StandardTest {
                 "trs",
                 new ArrayList<StandardVersion>() {{
                     add(new StandardVersion("2.0.0", "https://trs.org/v/2.0.0"));
-                }}, 
+                }},
+                new ArrayList<Implementation>() {{
+                    add(new Implementation());
+                }},
                 new WorkStream("Cloud", null),
                 "Standard [id=67985856-0af8-4ad9-8530-00ae355cc9d3, name=Tool Registry Service, summary=a summary of trs, description=a long description of trs, documentationUrl=https://trs.org, artifact=trs]"
             )},
@@ -134,7 +146,10 @@ public class StandardTest {
                 null,
                 new ArrayList<StandardVersion>() {{
                     add(new StandardVersion("1.0.0", "https://pedigree.org/v/1.0.0"));
-                }}, 
+                }},
+                new ArrayList<Implementation>() {{
+                    add(new Implementation());
+                }},
                 new WorkStream("Clinical & Phenotypic Data Capture", "Clin/Pheno"),
                 "Standard [id=b26e1fff-ac63-4adb-a639-91404ded8ed0, name=Pedigree, summary=a summary of pedigree, description=a long description of pedigree, documentationUrl=https://pedigree.org, artifact=null]"
             )}
@@ -154,6 +169,7 @@ public class StandardTest {
         Assert.assertEquals(standard.getStandardVersions().get(0).getVersionNumber(), testCase.getStandardVersions().get(0).getVersionNumber());
         Assert.assertEquals(standard.getWorkStream().getName(), testCase.getWorkStream().getName());
         Assert.assertEquals(standard.toString(), testCase.getExpString());
+        Assert.assertEquals(standard.getTableName(), "standard");
     }
 
     @Test(dataProvider = "cases")
@@ -170,7 +186,9 @@ public class StandardTest {
         standard.setReleaseStatus(testCase.getReleaseStatus());
         standard.setArtifact(testCase.getArtifact());
         standard.setStandardVersions(testCase.getStandardVersions());
+        standard.setImplementations(testCase.getImplementations());
         standard.setWorkStream(testCase.getWorkStream());
+        standard.lazyLoad();
         assertions(standard, testCase);
     }
 
@@ -185,6 +203,7 @@ public class StandardTest {
         standard.setArtifact(testCase.getArtifact());
         standard.setStandardVersions(testCase.getStandardVersions());
         standard.setWorkStream(testCase.getWorkStream());
+        standard.lazyLoad();
         assertions(standard, testCase);
     }
 }

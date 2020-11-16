@@ -74,7 +74,7 @@ public class Service implements RegistryEntity {
 
     public Service(String name, String description, String contactUrl,
         String documentationUrl, Date createdAt, Date updatedAt,
-        String environment, String version, String url) {
+        String environment, String version, String url, String curiePrefix) {
 
         this.name = name;
         this.description = description;
@@ -85,6 +85,7 @@ public class Service implements RegistryEntity {
         this.environment = environment;
         this.version = version;
         this.url = url;
+        this.curiePrefix = curiePrefix;
     }
 
     public void lazyLoad() {

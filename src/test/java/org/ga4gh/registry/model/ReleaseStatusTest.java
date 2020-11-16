@@ -70,32 +70,33 @@ public class ReleaseStatusTest {
         };
     }
 
+    public void assertions(ReleaseStatus releaseStatus, TestCase testCase) {
+        Assert.assertEquals(releaseStatus.getId().toString(), testCase.getId().toString());
+        Assert.assertEquals(releaseStatus.getStatus(), testCase.getStatus());
+        Assert.assertEquals(releaseStatus.getStandards().get(0).getName(), testCase.getStandards().get(0).getName());
+        Assert.assertEquals(releaseStatus.getStandardVersions().get(0).getVersionNumber(), testCase.getStandardVersions().get(0).getVersionNumber());
+        Assert.assertEquals(releaseStatus.toString(), testCase.getExpString());
+        Assert.assertEquals(releaseStatus.getTableName(), "release_status");
+    }
+
     @Test(dataProvider = "cases")
     public void testReleaseStatusNoArgsConstructor(TestCase testCase) throws Exception {
-
         ReleaseStatus releaseStatus = new ReleaseStatus();
         releaseStatus.setId(testCase.getId());
         releaseStatus.setStatus(testCase.getStatus());
         releaseStatus.setStandards(testCase.getStandards());
         releaseStatus.setStandardVersions(testCase.getStandardVersions());
-        Assert.assertEquals(releaseStatus.getId().toString(), testCase.getId().toString());
-        Assert.assertEquals(releaseStatus.getStatus(), testCase.getStatus());
-        Assert.assertEquals(releaseStatus.getStandards().get(0).getName(), testCase.getStandards().get(0).getName());
-        Assert.assertEquals(releaseStatus.getStandardVersions().get(0).getVersionNumber(), testCase.getStandardVersions().get(0).getVersionNumber());
-        Assert.assertEquals(releaseStatus.toString(), testCase.getExpString());
+        releaseStatus.lazyLoad();
+        assertions(releaseStatus, testCase);
     }
 
     @Test(dataProvider = "cases")
     public void testReleaseStatusAllArgsConstructor(TestCase testCase) throws Exception {
-
         ReleaseStatus releaseStatus = new ReleaseStatus(testCase.getStatus());
         releaseStatus.setId(testCase.getId());
         releaseStatus.setStandards(testCase.getStandards());
         releaseStatus.setStandardVersions(testCase.getStandardVersions());
-        Assert.assertEquals(releaseStatus.getId().toString(), testCase.getId().toString());
-        Assert.assertEquals(releaseStatus.getStatus(), testCase.getStatus());
-        Assert.assertEquals(releaseStatus.getStandards().get(0).getName(), testCase.getStandards().get(0).getName());
-        Assert.assertEquals(releaseStatus.getStandardVersions().get(0).getVersionNumber(), testCase.getStandardVersions().get(0).getVersionNumber());
-        Assert.assertEquals(releaseStatus.toString(), testCase.getExpString());
+        releaseStatus.lazyLoad();
+        assertions(releaseStatus, testCase);
     }
 }

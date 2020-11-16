@@ -13,13 +13,15 @@ public class ServiceTypeTest {
         private String artifact;
         private String version;
         private String expString;
+        private String expSignature;
         private int expHashcode;
 
-        public TestCase(String group, String artifact, String version, String expString, int expHashcode) {
+        public TestCase(String group, String artifact, String version, String expString, String expSignature, int expHashcode) {
             this.group = group;
             this.artifact = artifact;
             this.version = version;
             this.expString = expString;
+            this.expSignature = expSignature;
             this.expHashcode = expHashcode;
         }
 
@@ -37,6 +39,10 @@ public class ServiceTypeTest {
 
         public String getExpString() {
             return expString;
+        }
+
+        public String getExpSignature() {
+            return expSignature;
         }
 
         public int getExpHashcode() {
@@ -83,6 +89,7 @@ public class ServiceTypeTest {
                 "htsget",
                 "1.2.0",
                 "ServiceType [group=org.ga4gh, artifact=htsget, version=1.2.0]",
+                "org.ga4gh:htsget:1.2.0",
                 909141084
             )},
             {new TestCase(
@@ -90,6 +97,7 @@ public class ServiceTypeTest {
                 "refget",
                 "2.0.0",
                 "ServiceType [group=org.ga4gh, artifact=refget, version=2.0.0]",
+                "org.ga4gh:refget:2.0.0",
                 -118531823
             )},
             {new TestCase(
@@ -97,6 +105,7 @@ public class ServiceTypeTest {
                 "drs",
                 "1.0.0",
                 "ServiceType [group=org.ga4gh, artifact=drs, version=1.0.0]",
+                "org.ga4gh:drs:1.0.0",
                 527341720
             )}
         };
@@ -137,6 +146,7 @@ public class ServiceTypeTest {
         Assert.assertEquals(serviceType.getArtifact(), testCase.getArtifact());
         Assert.assertEquals(serviceType.getVersion(), testCase.getVersion());
         Assert.assertEquals(serviceType.toString(), testCase.getExpString());
+        Assert.assertEquals(serviceType.signature(), testCase.getExpSignature());
         Assert.assertEquals(serviceType.hashCode(), testCase.getExpHashcode());
         Assert.assertTrue(serviceType.equals(serviceType));
     }

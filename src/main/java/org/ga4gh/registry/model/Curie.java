@@ -5,7 +5,6 @@ import java.text.ParseException;
 public class Curie {
 
     private String prefix;
-
     private String id;
 
     public static Curie fromString(String curie) throws ParseException {
@@ -20,13 +19,13 @@ public class Curie {
     /* constructors */
 
     private Curie(String prefix, String id) {
-        this.prefix = prefix;
-        this.id = id;
+        setPrefix(prefix);
+        setId(id);
     }
 
     /* setters and getters */
 
-    public void setPrefix(String prefix) {
+    private void setPrefix(String prefix) {
         this.prefix = prefix;
     }
 
@@ -34,12 +33,11 @@ public class Curie {
         return prefix;
     }
 
-    public void setId(String id) {
+    private void setId(String id) {
         this.id = id;
     }
 
     public String getId() {
         return id;
     }
-    
 }

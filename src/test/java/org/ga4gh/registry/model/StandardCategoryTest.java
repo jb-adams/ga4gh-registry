@@ -84,28 +84,32 @@ public class StandardCategoryTest {
         };
     }
 
-    @Test(dataProvider = "cases")
-    public void testStandardCategoryNoArgsConstructor(TestCase testCase) throws Exception {
-
-        StandardCategory stdCategory = new StandardCategory();
-        stdCategory.setId(testCase.getId());
-        stdCategory.setCategory(testCase.getCategory());
-        stdCategory.setStandards(testCase.getStandards());
+    public void assertions(StandardCategory stdCategory, TestCase testCase) {
         Assert.assertEquals(stdCategory.getId().toString(), testCase.getId().toString());
         Assert.assertEquals(stdCategory.getCategory(), testCase.getCategory());
         Assert.assertEquals(stdCategory.getStandards().get(0).getName(), testCase.getStandards().get(0).getName());
         Assert.assertEquals(stdCategory.toString(), testCase.getExpString());
+        Assert.assertEquals(stdCategory.getTableName(), "standard_category");
+    }
+
+    @Test(dataProvider = "cases")
+    public void testStandardCategoryNoArgsConstructor(TestCase testCase) throws Exception {
+
+        StandardCategory stdCategory = new StandardCategory();
+        stdCategory.lazyLoad();
+        stdCategory.setId(testCase.getId());
+        stdCategory.setCategory(testCase.getCategory());
+        stdCategory.setStandards(testCase.getStandards());
+        assertions(stdCategory, testCase);
     }
 
     @Test(dataProvider = "cases")
     public void testStandardCategoryAllArgsConstructor(TestCase testCase) throws Exception {
 
         StandardCategory stdCategory = new StandardCategory(testCase.getCategory());
+        stdCategory.lazyLoad();
         stdCategory.setId(testCase.getId());
         stdCategory.setStandards(testCase.getStandards());
-        Assert.assertEquals(stdCategory.getId().toString(), testCase.getId().toString());
-        Assert.assertEquals(stdCategory.getCategory(), testCase.getCategory());
-        Assert.assertEquals(stdCategory.getStandards().get(0).getName(), testCase.getStandards().get(0).getName());
-        Assert.assertEquals(stdCategory.toString(), testCase.getExpString());
+        assertions(stdCategory, testCase);
     }
 }

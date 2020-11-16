@@ -10,6 +10,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.Hibernate;
+
 @Entity
 @Table(name = "standard_category")
 public class StandardCategory implements RegistryEntity {
@@ -41,7 +43,7 @@ public class StandardCategory implements RegistryEntity {
     }
 
     public void lazyLoad() {
-        
+        Hibernate.initialize(getStandards());
     }
 
     public String getTableName() {

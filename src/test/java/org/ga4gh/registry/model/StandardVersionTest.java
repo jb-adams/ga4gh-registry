@@ -68,7 +68,7 @@ public class StandardVersionTest {
                 new ReleaseStatus("Approved"),
                 new ArrayList<Service>() {{
                     add(new Service(
-                        "htsget reference implementation", null, null, null, null, null, null, null, null
+                        "htsget reference implementation", null, null, null, null, null, null, null, null, null
                     ));
                 }},
                 "StandardVersion [id=dca47919-ee0f-4b57-9001-3eb6aa81d863, versionNumber=1.2.0, documentationUrl=https://htsget.org/v/1.2.0]"
@@ -81,7 +81,7 @@ public class StandardVersionTest {
                 new ReleaseStatus("Approved"),
                 new ArrayList<Service>() {{
                     add(new Service(
-                        "wes reference implementation", null, null, null, null, null, null, null, null
+                        "wes reference implementation", null, null, null, null, null, null, null, null, null
                     ));
                 }},
                 "StandardVersion [id=1d639704-93d6-4ed9-a60a-8540c6cef3eb, versionNumber=1.0.0, documentationUrl=https://wes.org/v/1.0.0]"
@@ -94,7 +94,7 @@ public class StandardVersionTest {
                 new ReleaseStatus("Approved"),
                 new ArrayList<Service>() {{
                     add(new Service(
-                        "refget reference implementation", null, null, null, null, null, null, null, null
+                        "refget reference implementation", null, null, null, null, null, null, null, null, null
                     ));
                 }},
                 "StandardVersion [id=2f60f4bf-d7a9-4eb5-95f5-030e1790e3a4, versionNumber=2.0.0, documentationUrl=https://refget.org/v/2.0.0]"
@@ -102,16 +102,7 @@ public class StandardVersionTest {
         };
     }
 
-    @Test(dataProvider = "cases")
-    public void testOrganizationNoArgsConstructor(TestCase testCase) throws Exception {
-
-        StandardVersion standardVersion = new StandardVersion();
-        standardVersion.setId(testCase.getId());
-        standardVersion.setStandard(testCase.getStandard());
-        standardVersion.setVersionNumber(testCase.getVersionNumber());
-        standardVersion.setDocumentationUrl(testCase.getDocumentationUrl());
-        standardVersion.setReleaseStatus(testCase.getReleaseStatus());
-        standardVersion.setServices(testCase.getServices());
+    public void assertions(StandardVersion standardVersion, TestCase testCase) {
         Assert.assertEquals(standardVersion.getId().toString(), testCase.getId().toString());
         Assert.assertEquals(standardVersion.getStandard().getName(), testCase.getStandard().getName());
         Assert.assertEquals(standardVersion.getVersionNumber(), testCase.getVersionNumber());
@@ -119,6 +110,20 @@ public class StandardVersionTest {
         Assert.assertEquals(standardVersion.getReleaseStatus().getStatus(), testCase.getReleaseStatus().getStatus());
         Assert.assertEquals(standardVersion.getServices().get(0).getName(), testCase.getServices().get(0).getName());
         Assert.assertEquals(standardVersion.toString(), testCase.getExpString());
+        Assert.assertEquals(standardVersion.getTableName(), "standard_version");
+    }
+
+    @Test(dataProvider = "cases")
+    public void testOrganizationNoArgsConstructor(TestCase testCase) throws Exception {
+        StandardVersion standardVersion = new StandardVersion();
+        standardVersion.setId(testCase.getId());
+        standardVersion.setStandard(testCase.getStandard());
+        standardVersion.setVersionNumber(testCase.getVersionNumber());
+        standardVersion.setDocumentationUrl(testCase.getDocumentationUrl());
+        standardVersion.setReleaseStatus(testCase.getReleaseStatus());
+        standardVersion.setServices(testCase.getServices());
+        standardVersion.lazyLoad();
+        assertions(standardVersion, testCase);
     }
 
     @Test(dataProvider = "cases")
@@ -129,12 +134,7 @@ public class StandardVersionTest {
         standardVersion.setStandard(testCase.getStandard());
         standardVersion.setReleaseStatus(testCase.getReleaseStatus());
         standardVersion.setServices(testCase.getServices());
-        Assert.assertEquals(standardVersion.getId().toString(), testCase.getId().toString());
-        Assert.assertEquals(standardVersion.getStandard().getName(), testCase.getStandard().getName());
-        Assert.assertEquals(standardVersion.getVersionNumber(), testCase.getVersionNumber());
-        Assert.assertEquals(standardVersion.getDocumentationUrl(), testCase.getDocumentationUrl());
-        Assert.assertEquals(standardVersion.getReleaseStatus().getStatus(), testCase.getReleaseStatus().getStatus());
-        Assert.assertEquals(standardVersion.getServices().get(0).getName(), testCase.getServices().get(0).getName());
-        Assert.assertEquals(standardVersion.toString(), testCase.getExpString());
+        standardVersion.lazyLoad();
+        assertions(standardVersion, testCase);
     }
 }

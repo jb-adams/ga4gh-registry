@@ -22,10 +22,11 @@ public class ServiceTest {
         private String environment;
         private String version;
         private String url;
+        private String curiePrefix;
         private String standardArtifact;
         private String expString;
 
-        public TestCase(String id, StandardVersion standardVersion, String name, String description, Organization organization, String contactUrl, String documentationUrl, Date createdAt, Date updatedAt, String environment, String version, String url, String standardArtifact, String expString) {
+        public TestCase(String id, StandardVersion standardVersion, String name, String description, Organization organization, String contactUrl, String documentationUrl, Date createdAt, Date updatedAt, String environment, String version, String url, String curiePrefix, String standardArtifact, String expString) {
 
             this.id = id;
             this.standardVersion = standardVersion;
@@ -39,6 +40,7 @@ public class ServiceTest {
             this.environment = environment;
             this.version = version;
             this.url = url;
+            this.curiePrefix = curiePrefix;
             this.standardArtifact = standardArtifact;
             this.expString = expString;
         }
@@ -91,6 +93,10 @@ public class ServiceTest {
             return url;
         }
 
+        public String getCuriePrefix() {
+            return curiePrefix;
+        }
+
         public String getStandardArtifact() {
             return standardArtifact;
         }
@@ -122,6 +128,7 @@ public class ServiceTest {
                 "production",
                 "1.0.0",
                 "https://htsget.ga4gh.org",
+                "myhtsget",
                 "htsget",
                 "Service [id=a95fcb4c-2754-4a7e-992f-751808bec425, name=htsget reference implementation, description=description of this service, contactUrl=mailto:me@ga4gh.org, documentationUrl=https://ga4gh.org/implementations/thisone, environment=production, version=1.0.0, url=https://htsget.ga4gh.org]"
             )}
@@ -141,10 +148,12 @@ public class ServiceTest {
         Assert.assertEquals(service.getEnvironment(), testCase.getEnvironment());
         Assert.assertEquals(service.getVersion(), testCase.getVersion());
         Assert.assertEquals(service.getUrl(), testCase.getUrl());
+        Assert.assertEquals(service.getCuriePrefix(), testCase.getCuriePrefix());
         Assert.assertEquals(service.toString(), testCase.getExpString());
         Assert.assertEquals(service.getServiceType().getGroup(), "org.ga4gh");
         Assert.assertEquals(service.getServiceType().getArtifact(), testCase.getStandardArtifact());
         Assert.assertEquals(service.getServiceType().getVersion(), testCase.getStandardVersion().getVersionNumber());
+        Assert.assertEquals(service.getTableName(), "service");
     }
 
     @Test(dataProvider = "cases")
@@ -165,13 +174,14 @@ public class ServiceTest {
         service.setEnvironment(testCase.getEnvironment());
         service.setVersion(testCase.getVersion());
         service.setUrl(testCase.getUrl());
+        service.setCuriePrefix(testCase.getCuriePrefix());
         assertions(service, testCase);
     }
 
     @Test(dataProvider = "cases")
     public void testServiceAllArgsConstructor(TestCase testCase) throws Exception {
 
-        Service service = new Service(testCase.getName(), testCase.getDescription(), testCase.getContactUrl(), testCase.getDocumentationUrl(), testCase.getCreatedAt(), testCase.getUpdatedAt(), testCase.getEnvironment(), testCase.getVersion(), testCase.getUrl());
+        Service service = new Service(testCase.getName(), testCase.getDescription(), testCase.getContactUrl(), testCase.getDocumentationUrl(), testCase.getCreatedAt(), testCase.getUpdatedAt(), testCase.getEnvironment(), testCase.getVersion(), testCase.getUrl(), testCase.getCuriePrefix());
         service.setId(testCase.getId());
         service.setStandardVersion(testCase.getStandardVersion());
         service.getStandardVersion().setStandard(new Standard());
