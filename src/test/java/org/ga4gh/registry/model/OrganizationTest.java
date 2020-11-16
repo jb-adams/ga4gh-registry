@@ -58,6 +58,7 @@ public class OrganizationTest {
     }
 
     @DataProvider(name = "cases")
+    @SuppressWarnings("serial")
     public Object[][] getData() {
         return new Object[][] {
             {new TestCase(

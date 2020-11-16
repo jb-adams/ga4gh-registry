@@ -2,7 +2,6 @@ package org.ga4gh.registry.controller;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+/** REST API Controller for getting documentation from static file directory
+ * @author GA4GH Technical Team
+ */
 @EnableWebMvc
 @RestController
 @RequestMapping("/docs")

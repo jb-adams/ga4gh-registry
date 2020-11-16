@@ -1,34 +1,29 @@
 package org.ga4gh.registry.constant;
 
-/**
- * String constants of HTTP status codes
+/** String constants of HTTP status codes
+ * @author GA4GH Technical Team
  */
 public class HttpStatusCode {
 
-    /**
-     * HTTP OK code
+    /** HTTP OK code
      */
     public static final String OK = "200";
 
-    /**
-     * HTTP Bad Request code
+    /** HTTP Bad Request code
      */
     public static final String BAD_REQUEST = "400";
 
     public static final String FORBIDDEN = "403";
 
-    /**
-     * HTTP Not Found code
+    /** HTTP Not Found code
      */
     public static final String NOT_FOUND = "404";
 
-    /**
-     * HTTP Generic server-side error code
+    /** HTTP Generic server-side error code
      */
     public static final String SERVER_ERROR = "5xx";
 
-    /**
-     * HTTP internal server error code
+    /** HTTP internal server error code
      */
     public static final String INTERNAL_SERVER_ERROR = "500";
 }

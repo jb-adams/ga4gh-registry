@@ -86,6 +86,7 @@ public class ImplementationTest {
     }
 
     @DataProvider(name = "cases")
+    @SuppressWarnings("serial")
     public Object[][] getData() {
         Calendar createdDateA = Calendar.getInstance();
         Calendar updatedDateA = Calendar.getInstance();
