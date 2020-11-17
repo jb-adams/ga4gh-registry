@@ -3,6 +3,10 @@ package org.ga4gh.registry.util.hibernate;
 import java.util.Properties;
 import org.springframework.beans.factory.annotation.Value;
 
+/** Hibernate configuration properties loaded from properties file
+ * 
+ * @author GA4GH Technical Team
+ */
 public class HibernateConfig {
 
     @Value("${hibernate.connection.driver_class}")
@@ -29,6 +33,11 @@ public class HibernateConfig {
     @Value("${hibernate.current_session_context_class}")
     private String currentSessionContextClass;
 
+    /** Gets all hibernate-related properties specified in the properties
+     * config file
+     * 
+     * @return hibernate properties object
+     */
     public Properties getAllProperties() {
         Properties props = new Properties();
         props.setProperty("hibernate.connection.driver_class", getConnectionDriverClass());
@@ -41,6 +50,8 @@ public class HibernateConfig {
         props.setProperty("hibernate.current_session_context_class", getCurrentSessionContextClass());
         return props;
     }
+
+    /* Getters */
 
     public String getConnectionDriverClass() {
         return connectionDriverClass;

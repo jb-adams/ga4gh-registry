@@ -1,5 +1,11 @@
 package org.ga4gh.registry;
 
+/** String constants for AppConfig, which is the Spring Bean Configuration  
+ * class. This class provides constant values for bean names and qualifiers
+ * to avoid typos in the name and qualifier definitions
+ * 
+ * @author GA4GH Technical Team
+ */
 public class AppConfigConstants {
 
     /* ******************************
@@ -91,6 +97,7 @@ public class AppConfigConstants {
     /* ******************************
      * SERIALIZERS
      * ****************************** */
+
     // STANDARD
     public static final String BASIC_STANDARD_SERIALIZER = "basicStandardSerializer";
     public static final String RELATIONAL_STANDARD_SERIALIZER = "relationalStandardSerializer";
@@ -124,6 +131,7 @@ public class AppConfigConstants {
     /* ******************************
      * SERIALIZER MODULES
      * ****************************** */
+
     // STANDARD
     public static final String BASIC_STANDARD_SERIALIZER_MODULE = "basicStandardSerializerModule";
     public static final String RELATIONAL_STANDARD_SERIALIZER_MODULE = "relationalStandardSerializerModule";

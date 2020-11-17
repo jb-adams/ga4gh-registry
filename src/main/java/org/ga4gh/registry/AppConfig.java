@@ -1,7 +1,6 @@
 package org.ga4gh.registry;
 
 import com.fasterxml.jackson.databind.JsonSerializer;
-
 import org.ga4gh.registry.exception.CustomErrorAttributes;
 import org.ga4gh.registry.middleware.AuthorizationInterceptor;
 import org.ga4gh.registry.model.Implementation;
@@ -53,6 +52,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/** Spring Bean Configuration Class. Contains all bean definitions
+ * 
+ * @author GA4GH Technical Team
+ */
 @Configuration
 @ConfigurationProperties
 public class AppConfig implements WebMvcConfigurer {

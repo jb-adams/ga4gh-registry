@@ -12,6 +12,11 @@ import org.ga4gh.registry.exception.ResourceNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+/** Executes hibernate query language (HQL) queries against the database, which
+ * retrieves lists of entity objects
+ * 
+ * @author GA4GH Technical Team
+ */
 public class HibernateQuerier<T> implements ApplicationContextAware {
 
     private ApplicationContext context;
@@ -22,10 +27,21 @@ public class HibernateQuerier<T> implements ApplicationContextAware {
     private final Class<T> typeClass;
     private String queryString;
 
+    /* Constructors */
+
+    /** Instantiate a HibernateQuerier
+     * 
+     * @param typeClass The class of the object to be queried (as a proxy for db entity/table)
+     */
     public HibernateQuerier(Class<T> typeClass) {
         this.typeClass = typeClass;
     }
 
+    /** Query the database using the query string, and return the results as a
+     * list of entity objects
+     * 
+     * @return List of entity objects retrieved by query
+     */
     public List<T> getResults() {
         SessionFactory sessionFactory = hibernateUtil.getSessionFactory();
         Session session = sessionFactory.getCurrentSession();
@@ -44,6 +60,13 @@ public class HibernateQuerier<T> implements ApplicationContextAware {
         return results;
     }
 
+    /** Queries the database, but expects to match a unique entity, that is,
+     * only a single result. If the database query returns more or less than a single
+     * result, an error is thrown 
+     * 
+     * @return The entity object matching the query
+     * @throws ResourceNotFoundException
+     */
     public T getSingleResult() throws ResourceNotFoundException {
         List<T> results = getResults();
         T result = null;
@@ -55,6 +78,8 @@ public class HibernateQuerier<T> implements ApplicationContextAware {
         return result;
     }
 
+    /* Setters and Getters */
+    
     public Class<T> getTypeClass() {
         return typeClass;
     }

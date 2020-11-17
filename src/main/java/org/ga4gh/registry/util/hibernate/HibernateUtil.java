@@ -18,6 +18,10 @@ import org.ga4gh.registry.model.Service;
 import org.ga4gh.registry.model.StandardVersion;
 import org.ga4gh.registry.model.WorkStream;
 
+/** Provides database connectivity via Hibernate API
+ * 
+ * @author GA4GH Technical Team
+ */
 public class HibernateUtil {
 
     @Autowired
@@ -26,10 +30,15 @@ public class HibernateUtil {
     private boolean configured;
     private SessionFactory sessionFactory;
 
+    /** Instantiate a HibernateUtil
+     */
     public HibernateUtil() {
         configured = false;
     }
 
+    /** Build and configure the session factory, which yields database 
+     * sessions that can query the database
+     */
     @PostConstruct
     public void buildSessionFactory() {
         try {
@@ -54,6 +63,13 @@ public class HibernateUtil {
 
     /* API Methods */
 
+    /** Generic POST request functionality, creates/registers a new entity in
+     * the database
+     * 
+     * @param entityClass The class of the object to be saved (proxy for database entity/table)
+     * @param newObject The object to be created
+     * @throws HibernateException Thrown when the object could not be saved for any reason
+     */
     public void createEntityObject(Class<? extends RegistryModel> entityClass, Object newObject) throws HibernateException {
         Session session = newTransaction();
         try {
@@ -68,6 +84,14 @@ public class HibernateUtil {
         }
     }
 
+    /** Retrieves a single entity object from the database. Generally corresponds
+     * to the SHOW REST API endpoint 
+     * 
+     * @param entityClass The class of the object to be retrieved
+     * @param id The id of the object to be retrieved
+     * @return The database entity object
+     * @throws HibernateException Thrown when an error is encountered during retrieval
+     */
     public RegistryEntity readEntityObject(Class<? extends RegistryEntity> entityClass, String id) throws HibernateException {
         Session session = newTransaction();
         RegistryEntity object = null;
@@ -87,6 +111,15 @@ public class HibernateUtil {
         return object;
     }
 
+    /** Updates a single existing entity object in the database with new properties.
+     * Generally corresponds to the UPDATE REST API endpoint and the PUT HTTP request
+     * 
+     * @param entityClass The class of the object to be updated
+     * @param oldId The object's original id as it exists in the db before modification
+     * @param newId The object's new id, which may or may not differ from the original
+     * @param newObject The object containing new properties to update the old object with
+     * @throws HibernateException Thrown when the object could not be updated for any reason
+     */
     public void updateEntityObject(Class<? extends RegistryEntity> entityClass, String oldId, String newId, RegistryEntity newObject) throws HibernateException {
         Session session = newTransaction();
         try {
@@ -113,6 +146,13 @@ public class HibernateUtil {
         }
     }
 
+    /** Deletes a single existing entity object in the database. Generally corresponds
+     * to the DESTRY REST API endpoint and the DELETE HTTP request
+     * 
+     * @param entityClass The class of the object to be deleted
+     * @param id The id of the object to be deleted
+     * @throws HibernateException Thrown when the object could not be deleted for any reason
+     */
     public void deleteEntityObject(Class<? extends RegistryModel> entityClass, String id) throws HibernateException {
         Session session = newTransaction();
         RegistryModel object = null;
@@ -129,14 +169,23 @@ public class HibernateUtil {
         }
     }
 
-    /* private convenience methods */
+    /* Private Convenience Methods */
 
+    /** Retrieves a new session transaction, which will not conflict with 
+     * any other concurrent db transactions
+     * 
+     * @return a new database session transaction
+     */
     private Session newTransaction() {
         Session session = getSessionFactory().getCurrentSession();
         session.beginTransaction();
         return session;
     }
 
+    /** End/close a transaction
+     * 
+     * @param session The session containing the transaction to be closed
+     */
     private void endTransaction(Session session) {
         if (session.getTransaction().isActive()) {
             session.getTransaction().commit();
@@ -144,6 +193,8 @@ public class HibernateUtil {
         }
     }
 
+    /** Shuts down the session factory at end of program lifecycle
+     */
     public void shutdown() {
         getSessionFactory().close();
     }
