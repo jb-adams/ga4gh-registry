@@ -15,6 +15,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import org.hibernate.Hibernate;
 
+/** Standard model, represents a standard/specification. A single specification
+ * can have multiple versions (see StandardVersion). Standards are database 
+ * entities
+ * 
+ * @author GA4GH Technical Team
+ */
 @Entity
 @Table(name="standard")
 public class Standard implements RegistryEntity {
@@ -32,11 +38,6 @@ public class Standard implements RegistryEntity {
     @Column(name = "abbreviation")
     private String abbreviation;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "standard_category_id")
-    private StandardCategory standardCategory;
-
     @Column(name = "summary")
     private String summary;
 
@@ -46,17 +47,27 @@ public class Standard implements RegistryEntity {
     @Column(name = "documentation_url")
     private String documentationUrl;
 
+    @Column(name = "artifact")
+    private String artifact;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                          CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "standard_category_id")
+    private StandardCategory standardCategory;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                           CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "release_status_id")
     private ReleaseStatus releaseStatus;
 
-    @Column(name = "artifact")
-    private String artifact;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+                          CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "work_stream_id")
+    private WorkStream workStream;
 
     @OneToMany(mappedBy = "standard",
                fetch = FetchType.LAZY,
-               cascade = {})//CascadeType.ALL)
+               cascade = {})
     private List<StandardVersion> standardVersions;
 
     @ManyToMany
@@ -67,132 +78,144 @@ public class Standard implements RegistryEntity {
     )
     private List<Implementation> implementations;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "work_stream_id")
-    private WorkStream workStream;
+    /* Constructors */
 
-    /* constructors */
-
+    /** Instantiate a Standard
+     */
     public Standard() {
 
     }
 
+    /** Instantiate a Standard
+     * 
+     * @param name standard name
+     * @param summary short, one line summary/tagline of the standard
+     * @param description long description of the standard
+     * @param documentationUrl Standard's homepage URL (e.g. Github repo)
+     */
     public Standard(String name, String summary, String description, 
         String documentationUrl) {
-            this.name = name;
-            this.summary = summary;
-            this.description = description;
-            this.documentationUrl = documentationUrl;
-        }
+            
+        this.name = name;
+        this.summary = summary;
+        this.description = description;
+        this.documentationUrl = documentationUrl;
+    }
 
+    /* Override RegistryEntity */
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
     public void lazyLoad() {
         Hibernate.initialize(getStandardVersions());
         Hibernate.initialize(getImplementations());
     }
 
+    @Override
     public String getTableName() {
         return tableName;
     }
 
-    /* getters and setters */
+    /* Setters and Getters */
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
     }
 
     public String getAbbreviation() {
         return abbreviation;
     }
 
-    public void setAbbreviation(String abbreviation) {
-        this.abbreviation = abbreviation;
-    }
-
-    public StandardCategory getStandardCategory() {
-        return standardCategory;
-    }
-
-    public void setStandardCategory(StandardCategory standardCategory) {
-        this.standardCategory = standardCategory;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getSummary() {
         return summary;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDocumentationUrl(String documentationUrl) {
+        this.documentationUrl = documentationUrl;
     }
 
     public String getDocumentationUrl() {
         return documentationUrl;
     }
 
-    public void setDocumentationUrl(String documentationUrl) {
-        this.documentationUrl = documentationUrl;
-    }
-
-    public ReleaseStatus getReleaseStatus() {
-        return releaseStatus;
-    }
-
-    public void setReleaseStatus(ReleaseStatus releaseStatus) {
-        this.releaseStatus = releaseStatus;
+    public void setArtifact(String artifact) {
+        this.artifact = artifact;
     }
 
     public String getArtifact() {
         return artifact;
     }
 
-    public void setArtifact(String artifact) {
-        this.artifact = artifact;
+    public void setStandardCategory(StandardCategory standardCategory) {
+        this.standardCategory = standardCategory;
     }
 
-    public List<StandardVersion> getStandardVersions() {
-        return standardVersions;
+    public StandardCategory getStandardCategory() {
+        return standardCategory;
     }
 
-    public void setStandardVersions(List<StandardVersion> standardVersions) {
-        this.standardVersions = standardVersions;
+    public void setReleaseStatus(ReleaseStatus releaseStatus) {
+        this.releaseStatus = releaseStatus;
     }
 
-    public List<Implementation> getImplementations() {
-        return implementations;
-    }
-
-    public void setImplementations(List<Implementation> implementations) {
-        this.implementations = implementations;
-    }
-
-    public WorkStream getWorkStream() {
-        return workStream;
+    public ReleaseStatus getReleaseStatus() {
+        return releaseStatus;
     }
 
     public void setWorkStream(WorkStream workStream) {
         this.workStream = workStream;
     }
 
+    public WorkStream getWorkStream() {
+        return workStream;
+    }
+
+    public void setStandardVersions(List<StandardVersion> standardVersions) {
+        this.standardVersions = standardVersions;
+    }
+
+    public List<StandardVersion> getStandardVersions() {
+        return standardVersions;
+    }
+
+    public void setImplementations(List<Implementation> implementations) {
+        this.implementations = implementations;
+    }
+
+    public List<Implementation> getImplementations() {
+        return implementations;
+    }
+
+    @Override
     public String toString() {
         return "Standard [id=" + id + ", name=" + name + 
                ", summary=" + summary +

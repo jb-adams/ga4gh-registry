@@ -16,6 +16,10 @@ import org.ga4gh.registry.model.Service;
 import org.ga4gh.registry.model.URIResolution;
 import org.ga4gh.registry.util.requesthandler.RequestHandlerFactory;
 
+/**
+ * REST API Controller for resolving URIs/URLs
+ * @author GA4GH Technical Team
+ */
 @EnableWebMvc
 @RestController
 @RequestMapping("/resolve-uri")
@@ -25,6 +29,12 @@ public class Resolve {
     @Qualifier(AppConfigConstants.RESOLVE_URI_HANDLER_FACTORY)
     RequestHandlerFactory<Service, Service, URIResolution> resolveURIHandlerFactory;
 
+    /** Resolve a passed compact identifier (CURIE) to a URL referencing an
+     * object behind a registered web service
+     * 
+     * @param pathParams parameters on URL path, contains CURIE
+     * @return response entity with URL resolved to an object
+     */
     @GetMapping(path = "/{uri:.+}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> resolveURI(@PathVariable Map<String, String> pathParams) {
         return resolveURIHandlerFactory.handleRequest(pathParams);

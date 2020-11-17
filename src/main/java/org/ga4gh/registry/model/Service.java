@@ -12,6 +12,12 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+/** Service model, represents a running web service / API that implements a 
+ * GA4GH API Specification. The service's 'type' will correspond to the API
+ * specification it implements. Services are database entities
+ * 
+ * @author GA4GH Technical Team
+ */
 @Entity
 @Table(name = "service")
 public class Service implements RegistryEntity {
@@ -23,23 +29,11 @@ public class Service implements RegistryEntity {
     @NotNull
     private String id;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "standard_version_id")
-    private StandardVersion standardVersion;
-
     @Column(name = "name")
     private String name;
 
     @Column(name = "description")
     private String description;
-
-    @ManyToOne(fetch = FetchType.EAGER,
-               // cascade = CascadeType.ALL)
-               cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                          CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "organization_id")
-    private Organization organization;
 
     @Column(name = "contact_url")
     private String contactUrl;
@@ -65,13 +59,41 @@ public class Service implements RegistryEntity {
     @Column(name = "curie_prefix")
     private String curiePrefix;
 
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+        CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "standard_version_id")
+    private StandardVersion standardVersion;
+
+    @ManyToOne(fetch = FetchType.EAGER,
+    cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
+
     @Transient
     private ServiceType type;
 
+    /* Constructors */
+
+    /** Instantiates a Service
+     */
     public Service() {
 
     }
 
+    /** Instantiates a Service
+     * 
+     * @param name service name
+     * @param description service description
+     * @param contactUrl contact URL (e.g. mailto:user@address.com) for this service
+     * @param documentationUrl web page containing this service's documentation (e.g. OpenAPI docs)
+     * @param createdAt timestamp indicating when service was first registered
+     * @param updatedAt timestamp indicating when service properties were last updated in the registry
+     * @param environment the deployment environment of the service (e.g. prod, dev)
+     * @param version service's version number
+     * @param url service's base URL
+     * @param curiePrefix the CURIE prefix associated with the service
+     */
     public Service(String name, String description, String contactUrl,
         String documentationUrl, Date createdAt, Date updatedAt,
         String environment, String version, String url, String curiePrefix) {
@@ -88,116 +110,124 @@ public class Service implements RegistryEntity {
         this.curiePrefix = curiePrefix;
     }
 
-    public void lazyLoad() {
+    /* Override RegistryEntity */
 
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public String getId() {
-        return id;
-    }
-
+    @Override
     public void setId(String id) {
         this.id = id;
     }
 
-    public StandardVersion getStandardVersion() {
-        return standardVersion;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setStandardVersion(StandardVersion standardVersion) {
-        this.standardVersion = standardVersion;
+    @Override
+    public void lazyLoad() {
+
+    }
+
+    @Override
+    public String getTableName() {
+        return tableName;
+    }
+
+    /* Setters and Getters */
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Organization getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
+    public void setContactUrl(String contactUrl) {
+        this.contactUrl = contactUrl;
     }
 
     public String getContactUrl() {
         return contactUrl;
     }
 
-    public void setContactUrl(String contactUrl) {
-        this.contactUrl = contactUrl;
+    public void setDocumentationUrl(String documentationUrl) {
+        this.documentationUrl = documentationUrl;
     }
 
     public String getDocumentationUrl() {
         return documentationUrl;
     }
 
-    public void setDocumentationUrl(String documentationUrl) {
-        this.documentationUrl = documentationUrl;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setEnvironment(String environment) {
+        this.environment = environment;
     }
 
     public String getEnvironment() {
         return environment;
     }
 
-    public void setEnvironment(String environment) {
-        this.environment = environment;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public String getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setCuriePrefix(String curiePrefix) {
+        this.curiePrefix = curiePrefix;
     }
 
     public String getCuriePrefix() {
         return curiePrefix;
     }
 
-    public void setCuriePrefix(String curiePrefix) {
-        this.curiePrefix = curiePrefix;
+    public void setStandardVersion(StandardVersion standardVersion) {
+        this.standardVersion = standardVersion;
+    }
+
+    public StandardVersion getStandardVersion() {
+        return standardVersion;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+
+    public Organization getOrganization() {
+        return organization;
     }
 
     public void setType(ServiceType type) {
@@ -222,6 +252,7 @@ public class Service implements RegistryEntity {
         return serviceType;
     }
 
+    @Override
     public String toString() {
         return "Service ["
                + "id=" + id + ", "

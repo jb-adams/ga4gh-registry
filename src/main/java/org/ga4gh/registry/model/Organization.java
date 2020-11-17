@@ -12,6 +12,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import org.hibernate.Hibernate;
 
+/** Organization model, represents an organization implementing Implementations
+ * and/or Services within the registry. Organizations are database entities
+ * 
+ * @author GA4GH Technical Team
+ */
 @Entity
 @Table(name = "organization")
 public class Organization implements RegistryEntity {
@@ -46,77 +51,90 @@ public class Organization implements RegistryEntity {
     @OrderBy("id")
     private List<Service> services;
 
-    /* constructors */
+    /* Constructors */
 
+    /** Instantiates an Organization
+     */
     public Organization() {}
 
+    /** Instantiates an Organization
+     * 
+     * @param name full name
+     * @param shortName short name or abbreviation
+     * @param url http(s) URL to org's home page
+     */
     public Organization(String name, String shortName, String url) {
         this.name = name;
         this.shortName = shortName;
         this.url = url;
     }
 
+    /* Override RegistryEntity */
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
     public void lazyLoad() {
         Hibernate.initialize(getImplementations());
         Hibernate.initialize(getServices());
     }
 
+    @Override
     public String getTableName() {
         return tableName;
     }
 
-    /* getters and setters */
+    /* Setters and Getters */
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
     public String getShortName() {
         return shortName;
     }
 
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setImplementations(List<Implementation> implementations) {
+        this.implementations = implementations;
     }
 
     public List<Implementation> getImplementations() {
         return implementations;
     }
 
-    public void setImplementations(List<Implementation> implementations) {
-        this.implementations = implementations;
+    public void setServices(List<Service> services) {
+        this.services = services;
     }
 
     public List<Service> getServices() {
         return services;
     }
 
-    public void setServices(List<Service> services) {
-        this.services = services;
-    }
-
-    /* toString method */
-
+    @Override
     public String toString() {
         return "Organization [id=" + id + ", name=" + name +
                ", shortName=" + shortName + ", url=" + url + "]";

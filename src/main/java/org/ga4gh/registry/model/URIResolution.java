@@ -1,5 +1,13 @@
 package org.ga4gh.registry.model;
 
+/** Model representing the resolution of a URL from a passed compact identifier
+ * (e.g. CURIE). Generally, the resolved URL will point to a specific object stored
+ * behind one of the services in the registry. URIResolutions are transient,
+ * they are not stored in the database, though registered service entities
+ * are used to resolve request CURIEs
+ * 
+ * @author GA4GH Technical Team
+ */
 public class URIResolution implements RegistryModel {
 
     private String serviceId;
@@ -7,12 +15,21 @@ public class URIResolution implements RegistryModel {
     private ServiceType serviceType;
     private String resolvedURL;
 
-    /* constructors */
+    /* Constructors */
 
+    /** Instantiate a URIResolution
+     */
     public URIResolution() {
 
     }
 
+    /** Instantiate a URIResolution
+     * 
+     * @param serviceId The ID of the service that the resolved URL points to
+     * @param serviceName The name of the service that the resolved URL points to
+     * @param serviceType The ServiceType (group, artifact, version) of the service
+     * @param resolvedURL The full URL resolved based on a passed CURIE/identifier 
+     */
     public URIResolution(String serviceId, String serviceName, ServiceType serviceType, String resolvedURL) {
         this.serviceId = serviceId;
         this.serviceName = serviceName;
@@ -20,7 +37,7 @@ public class URIResolution implements RegistryModel {
         this.resolvedURL = resolvedURL;
     }
 
-    /* setters and getters */
+    /* Setters and Getters */
 
     public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
@@ -54,6 +71,7 @@ public class URIResolution implements RegistryModel {
         return resolvedURL;
     }
 
+    @Override
     public String toString() {
         return "URIResolution: ["
                + "serviceId=" + serviceId + ", "

@@ -9,9 +9,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
 import org.hibernate.Hibernate;
 
+/** StandardCategory model, represents a category of GA4GH standard (e.g. 
+ * API, File Format, etc). Standard Categories are database entities
+ * 
+ * @author GA4GH Technical Team
+ */
 @Entity
 @Table(name = "standard_category")
 public class StandardCategory implements RegistryEntity {
@@ -32,52 +36,63 @@ public class StandardCategory implements RegistryEntity {
                           CascadeType.DETACH, CascadeType.REFRESH})
     private List<Standard> standards;
 
-    /* constructors */
+    /* Constructors */
 
+    /** Instantiate a StandardCategory
+     */
     public StandardCategory() {
 
     }
 
+    /** Instantiate a StandardCategory
+     * 
+     * @param category name/description of the standard's category
+     */
     public StandardCategory(String category) {
         this.category = category;
     }
 
-    public void lazyLoad() {
-        Hibernate.initialize(getStandards());
+    /* Override RegistryEntity */
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getTableName() {
-        return tableName;
-    }
-
-    /* getters and setters */
-
+    @Override
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @Override
+    public void lazyLoad() {
+        Hibernate.initialize(getStandards());
+    }
+
+    @Override
+    public String getTableName() {
+        return tableName;
+    }
+
+    /* Setters and Getters */
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setStandards(List<Standard> standards) {
+        this.standards = standards;
     }
 
     public List<Standard> getStandards() {
         return standards;
     }
 
-    public void setStandards(List<Standard> standards) {
-        this.standards = standards;
-    }
-
-    /* toString method */
-
+    @Override
     public String toString() {
         return "StandardCategory [id=" + id + ", category=" + category + "]";
     }

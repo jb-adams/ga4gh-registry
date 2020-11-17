@@ -21,12 +21,23 @@ public class Docs {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
+    /** Serves the contents of a requested file located in static file directory 
+     * 
+     * @param request The HTTP request object
+     * @return response entity containing contents of static file
+     * @throws IOException
+     */
     @GetMapping(value = "/**")
     public ResponseEntity<String> getDocByFileName(HttpServletRequest request) throws IOException {
+
+        // map the requested URL to a file in the static directory, and attempt
+        // to load as a resource
         String urlPathPrefix = getContextPath() + "/docs";
         String resourcePath = request.getRequestURI().replaceFirst(urlPathPrefix, "/static");
         ClassPathResource resource = new ClassPathResource(resourcePath);
         ResponseEntity<String> responseEntity = ResponseEntity.notFound().build();
+
+        // if resource exists, read and send back to client
         if (resource.exists()) {
             String body = new String(resource.getInputStream().readAllBytes());
             responseEntity = ResponseEntity.ok().body(body);

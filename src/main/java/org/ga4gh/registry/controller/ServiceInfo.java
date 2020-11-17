@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+/** REST API Controller for Service Info 
+ * @author GA4GH Technical Team
+ */
 @EnableWebMvc
 @RestController
 @RequestMapping("/service-info")
@@ -23,6 +26,10 @@ public class ServiceInfo {
     @Qualifier(AppConfigConstants.SHOW_SERVICE_INFO_HANDLER_FACTORY)
     SingleGenericRequestHandlerFactory<Service> showServiceInfo;
 
+    /** Get this service's service info
+     * @param headers request headers
+     * @return response entity containing this service's service info
+     */
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> getServiceInfo(@RequestHeader Map<String, String> headers) {
         return showServiceInfo.handleRequest();

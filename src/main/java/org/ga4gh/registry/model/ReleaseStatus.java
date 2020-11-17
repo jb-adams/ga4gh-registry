@@ -10,6 +10,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.Hibernate;
+
+/** ReleaseStatus model, represents the status of a GA4GH standard 
+ * (e.g. Approved, InProgress, Proposed, Archived, etc.). ReleaseStatus objects
+ * are database entities
+ * 
+ * @author GA4GH Technical Team
+ */
 @Entity
 @Table(name = "release_status")
 public class ReleaseStatus implements RegistryEntity {
@@ -36,60 +44,72 @@ public class ReleaseStatus implements RegistryEntity {
                           CascadeType.DETACH, CascadeType.REFRESH})
     private List<StandardVersion> standardVersions;
 
-    /* constructors */
+    /* Constructors */
 
+    /** Instantiate a ReleaseStatus
+     */
     public ReleaseStatus() {
 
     }
 
+    /** Instantiate a ReleaseStatus
+     * 
+     * @param status name/description of the standard's status
+     */
     public ReleaseStatus(String status) {
         this.status = status;
     }
 
-    public void lazyLoad() {
-        
+    /* Override RegistryEntity */
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getTableName() {
-        return tableName;
-    }
-
-    /* getters and setters */
-
+    @Override
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @Override
+    public void lazyLoad() {
+        Hibernate.initialize(getStandards());
+        Hibernate.initialize(getStandardVersions());
+    }
+
+    @Override
+    public String getTableName() {
+        return tableName;
+    }
+
+    /* Setters and Getters */
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStandards(List<Standard> standards) {
+        this.standards = standards;
     }
 
     public List<Standard> getStandards() {
         return standards;
     }
 
-    public void setStandards(List<Standard> standards) {
-        this.standards = standards;
+    public void setStandardVersions(List<StandardVersion> standardVersions) {
+        this.standardVersions = standardVersions;
     }
 
     public List<StandardVersion> getStandardVersions() {
         return standardVersions;
     }
 
-    public void setStandardVersions(List<StandardVersion> standardVersions) {
-        this.standardVersions = standardVersions;
-    }
-
-    /* toString method */
-
+    @Override
     public String toString() {
         return "ReleaseStatus [id=" + id + ", status=" + status + "]";
     }

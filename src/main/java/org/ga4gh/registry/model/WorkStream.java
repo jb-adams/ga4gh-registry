@@ -8,6 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/** WorkStream model, represents a single GA4GH technical or foundational work stream.
+ * Standards belong to one primary work stream. WorkStream objects are database
+ * entities
+ * 
+ * @author GA4GH Technical Team
+ */
 @Entity
 @Table(name="work_stream")
 public class WorkStream implements RegistryEntity {
@@ -28,59 +34,73 @@ public class WorkStream implements RegistryEntity {
                cascade=CascadeType.ALL)
     private List<Standard> standards;
 
-    /* constructors */
+    /* Constructors */
 
+    /** Instantiate a WorkStream
+     */
     public WorkStream() {
 
     }
 
+    /** Instantiate a WorkStream
+     * 
+     * @param name work stream name
+     * @param abbreviation work stream short name, abbreviation, or acronym
+     */
     public WorkStream(String name, String abbreviation) {
         this.name = name;
         this.abbreviation = abbreviation;
     }
 
-    public void lazyLoad() {
+    /* Override RegistryEntity */
 
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getTableName() {
-        return tableName;
-    }
-
-    /* getters and setters */
-
+    @Override
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @Override
+    public void lazyLoad() {
+
+    }
+
+    @Override
+    public String getTableName() {
+        return tableName;
+    }
+
+    /* Setters and Getters */
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
     }
 
     public String getAbbreviation() {
         return abbreviation;
     }
 
-    public void setAbbreviation(String abbreviation) {
-        this.abbreviation = abbreviation;
+    public void setStandards(List<Standard> standards) {
+        this.standards = standards;
     }
 
     public List<Standard> getStandards() {
         return standards;
     }
 
-    public void setStandards(List<Standard> standards) {
-        this.standards = standards;
-    }
-
+    @Override
     public String toString() {
         return "WorkStream [id=" + id
             + ", name=" + name 
